@@ -9,6 +9,7 @@ customersRouter.route('/')
   .get((req, res, next) => {
     CustomersService.getAllCustomers(req.app.get('db'))
       .then(customers => {
+        console.log(customers);
         res.json(CustomersService.serializeCustomers(customers))
       })
       .catch(next);
@@ -74,7 +75,7 @@ async function checkCustomerExists(req, res, next) {
 
     if(!customer) {
       return res.status(404).json({
-        error: 'Customer doesn\'nt exist.'
+        error: 'Customer doesn\'t exist.'
       });
     }
 

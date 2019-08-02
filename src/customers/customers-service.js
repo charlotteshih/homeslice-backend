@@ -51,10 +51,10 @@ const CustomersService = {
       last_name: xss(customer.last_name),
       email: xss(customer.email),
       phone: xss(customer.phone),
-      street_address: xss(street_address),
-      city: xss(city),
-      state: xss(state),
-      zipcode: xss(zipcode)
+      street_address: xss(customer.street_address),
+      city: xss(customer.city),
+      state: xss(customer.state),
+      zipcode: xss(customer.zipcode)
     };
   }
 };
