@@ -20,10 +20,11 @@ describe('Restaurants Endpoints', () => {
     app.set('db', db);
   });
 
+  after('Disconnect from db', () => db.destroy());
+
   before('Cleanup', () => helpers.cleanTables(db));
 
-  after('Disconnect from db', () => db.destroy());
-  afterEach('Cleanup', () => helpers.cleanTables(db))
+  afterEach('Cleanup', () => helpers.cleanTables(db));
 
   describe('GET /api/restaurants', () => {
     context('Given no restaurants', () => {

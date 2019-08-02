@@ -89,7 +89,20 @@ function makeCustomersArray() {
   ];
 }
 
-// function makeExpectedRestaurant() {}
+function makeExpectedRestaurant(restaurants, restaurant) {
+  // const restaurant = restaurants.find(restaurant => restaurant.id === restaurants.id)
+
+  return {
+    id: restaurant.id,
+    name: restaurant.name,
+    email: restaurant.email,
+    password: restaurant.password,
+    street_address: restaurant.street_address,
+    city: restaurant.city,
+    state: restaurant.state,
+    zipcode: restaurant.zipcode
+  };
+}
 
 // function makeExpectedCustomer() {}
 
@@ -105,7 +118,7 @@ function makeMaliciousRestaurant(restaurant) {
     zipcode: '00000'
   };
   const expectedRestaurant = {
-    ...makeMaliciousRestaurant([restaurant], maliciousRestaurant),
+    ...makeExpectedRestaurant([restaurant], maliciousRestaurant),
     email: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
   };
@@ -213,7 +226,7 @@ function cleanTables(db) {
           trx.raw(`SELECT setval('pizzas_id_seq', 0)`),
           trx.raw(`SELECT setval('customers_id_seq', 0)`),
           trx.raw(`SELECT setval('orders_id_seq', 0)`),
-        ])
+        ]);
       });
   });
 }
