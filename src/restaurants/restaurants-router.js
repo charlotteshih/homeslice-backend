@@ -100,7 +100,7 @@ async function checkRestaurantExists(req, res, next) {
 
     if(!restaurant) {
       return res.status(404).json({
-        error: 'Restaurant does\'nt exist.'
+        error: 'Restaurant doesn\'t exist.'
       });
     }
 

@@ -8,30 +8,33 @@ function makeRestaurantsArray() {
       name: 'Mario\'s Pizza',
       email: 'mario@mariospizza.com',
       password: 'ItsAMe123!',
+      phone: '333-333-3333',
       street_address: '123 Mushroom Street',
       city: 'Mushroom Land',
       state: 'MA',
-      zip: '02467'
+      zipcode: '02467'
     },
     {
       id: 2,
       name: 'Luigi\'s Pizza',
       email: 'luigi@luigispizza.com',
       password: 'ItsAMe456!',
+      phone: '444-444-4444',
       street_address: '456 Mansion Way',
       city: 'Mushroom Land',
       state: 'MA',
-      zip: '02467'
+      zipcode: '02467'
     },
     {
       id: 3,
       name: 'Bowser\'s Pizzeria',
       email: 'bowser@bowserspizzeria.com',
       password: 'Rawr789!',
+      phone: '555-555-5555',
       street_address: 'BOWSER\'S CASTLE',
       city: 'Koopa Keep',
       state: 'CT',
-      zip: '03551'
+      zipcode: '03551'
     }
   ];
 }
@@ -72,6 +75,8 @@ function makeCustomersArray() {
       id: 1,
       first_name: 'Peach',
       last_name: 'Princess',
+      email: 'peach@princess.com',
+      phone: '111-111-1111',
       street_address: 'Peach\'s Castle',
       city: 'Mushroom Land',
       state: 'MA',
@@ -81,10 +86,62 @@ function makeCustomersArray() {
       id: 2,
       first_name: 'Daisy',
       last_name: 'Princess',
+      email: 'daisy@princess.com',
+      phone: '222-222-2222',
       street_address: 'Peach\'s Castle',
       city: 'Mushroom Land',
       state: 'MA',
       zipcode: '02467'
+    }
+  ];
+}
+
+function makeOrdersArray(restaurants, pizzas, customers) {
+  return [
+    {
+      id: 1,
+      restaurant_id: restaurants[1].id,
+      pizza_id: pizzas[0].id,
+      customer_id: customers[1].id,
+      date_created: '2029-01-22T16:28:32.615Z',
+      order_status: 'Ordered',
+      order_total: 10.59
+    },
+    {
+      id: 2,
+      restaurant_id: restaurants[2].id,
+      pizza_id: pizzas[1].id,
+      customer_id: customers[0].id,
+      date_created: '2029-01-22T16:28:32.615Z',
+      order_status: 'Done',
+      order_total: 7.00
+    },
+    {
+      id: 3,
+      restaurant_id: restaurants[0].id,
+      pizza_id: pizzas[2].id,
+      customer_id: customers[0].id,
+      date_created: '2029-01-22T16:28:32.615Z',
+      order_status: 'In Progress',
+      order_total: 11.99
+    },
+    {
+      id: 4,
+      restaurant_id: restaurants[2].id,
+      pizza_id: pizzas[3].id,
+      customer_id: customers[1].id,
+      date_created: '2029-01-22T16:28:32.615Z',
+      order_status: 'Done',
+      order_total: 9.69
+    },
+    {
+      id: 5,
+      restaurant_id: restaurants[0].id,
+      pizza_id: pizzas[4].id,
+      customer_id: customers[0].id,
+      date_created: '2029-01-22T16:28:32.615Z',
+      order_status: 'Ready for Pickup',
+      order_total: 12.25
     }
   ];
 }
@@ -149,56 +206,6 @@ function makeMaliciousCustomer(customer) {
   };
 }
 
-function makeOrdersArray(restaurants, pizzas, customers) {
-  return [
-    {
-      id: 1,
-      restaurant_id: restaurants[1].id,
-      pizza_id: pizzas[0].id,
-      customer_id: customers[1].id,
-      date_created: '2029-01-22T16:28:32.615Z',
-      order_status: 'Ordered',
-      order_total: 10.59
-    },
-    {
-      id: 2,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[1].id,
-      customer_id: customers[0].id,
-      date_created: '2029-01-22T16:28:32.615Z',
-      order_status: 'Done',
-      order_total: 7.00
-    },
-    {
-      id: 3,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[2].id,
-      customer_id: customers[0].id,
-      date_created: '2029-01-22T16:28:32.615Z',
-      order_status: 'In Progress',
-      order_total: 11.99
-    },
-    {
-      id: 4,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[3].id,
-      customer_id: customers[1].id,
-      date_created: '2029-01-22T16:28:32.615Z',
-      order_status: 'Done',
-      order_total: 9.69
-    },
-    {
-      id: 5,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[4].id,
-      customer_id: customers[0].id,
-      date_created: '2029-01-22T16:28:32.615Z',
-      order_status: 'Ready for Pickup',
-      order_total: 12.25
-    }
-  ];
-}
-
 function makeFixtures() {
   const testRestaurants = makeRestaurantsArray();
   const testPizzas = makePizzasArray();
@@ -218,10 +225,10 @@ function cleanTables(db) {
     )
       .then(() => {
         Promise.all([
-          trx.raw(`ALTER SEQUENCE restaurants_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`ALTER SEQUENCE pizzas_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`ALTER SEQUENCE customers_id_seq minvalue 0 START WITH 1`),
-          trx.raw(`ALTER SEQUENCE orders_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE restaurants_id_seq MINVALUE 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE pizzas_id_seq MINVALUE 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE customers_id_seq MINVALUE 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE orders_id_seq MINVALUE 0 START WITH 1`),
           trx.raw(`SELECT setval('restaurants_id_seq', 0)`),
           trx.raw(`SELECT setval('pizzas_id_seq', 0)`),
           trx.raw(`SELECT setval('customers_id_seq', 0)`),

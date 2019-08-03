@@ -76,7 +76,7 @@ describe('Restaurants Endpoints', () => {
         const restaurant_id = 123456;
         return supertest(app)
           .get(`/api/restaurants/${restaurant_id}`)
-          .get('Authorization', helpers.makeAuthHeader(testRestaurants[0]))
+          // .get('Authorization', helpers.makeAuthHeader(testRestaurants[0]))
           .expect(404, { error: 'Restaurant doesn\'t exist.' });
       });
     });
