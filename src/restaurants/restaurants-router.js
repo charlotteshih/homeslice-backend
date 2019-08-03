@@ -31,9 +31,9 @@ restaurantsRouter.route('/')
     }
 
     RestaurantsService.hasUserWithUserName(req.app.get('db'), email)
-      .then(hasUserWithUserName => {
-        if (hasUserWithUserName) {
-          return res.status(400).json({ error: `Username already taken.` });
+      .then(hasUserWithEmail => {
+        if (hasUserWithEmail) {
+          return res.status(400).json({ error: `email already taken.` });
         }
 
         return RestaurantsService.hashPassword(password)
@@ -51,7 +51,10 @@ restaurantsRouter.route('/')
 
             return RestaurantsService.insertUser(req.app.get('db'), newUser)
               .then(restaurant => {
-                res.status(201).location(path.posix.join(req.originalUrl), `/${restaurant.id}`)
+                res
+                  .status(201)
+                  .location(path.posix.join(req.originalUrl), `/${restaurant.id}`)
+                  .json(RestaurantsService.serializeUser(restaurant));
               })
           })
       })
