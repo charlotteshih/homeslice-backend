@@ -9,8 +9,7 @@ customersRouter.route('/')
   .get((req, res, next) => {
     CustomersService.getAllCustomers(req.app.get('db'))
       .then(customers => {
-        console.log(customers);
-        res.json(CustomersService.serializeCustomers(customers))
+        res.json(CustomersService.serializeCustomers(customers));
       })
       .catch(next);
   })

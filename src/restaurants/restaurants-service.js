@@ -4,12 +4,20 @@ const xss = require('xss');
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 const RestaurantsService = {
-  hasUserWithUserName(db, email) {
-    return db('restaurants')
-      .where({ email })
-      .first()
-      .then(user => !!user)
+  getAllRestaurants(db) {
+    return db
+      .from('restaurants')
+      .select('*');
   },
+
+  getRestaurantById(db, id) {
+    return db
+      .from('restaurants')
+      .select('*')
+      .where('restaurants.id', id)
+      .first();
+  },
+
   insertUser(db, newUser) {
     return db
       .insert(newUser)
@@ -17,6 +25,28 @@ const RestaurantsService = {
       .returning('*')
       .then(([user]) => user)
   },
+
+  updateUser(db, id, newUserFields) {
+    return db
+      .from('restaurants')
+      .where({ id })
+      .update(newUserFields);
+  },
+
+  removeUser(db, id) {
+    return db
+      .from('restaurants')
+      .where({ id })
+      .delete();
+  },
+
+  hasUserWithUserName(db, email) {
+    return db('restaurants')
+      .where({ email })
+      .first()
+      .then(user => !!user)
+  },
+
   validatePassword(password) {
     if (password.length < 8) {
       return 'Password must be longer than 8 characters.';
@@ -32,25 +62,28 @@ const RestaurantsService = {
     }
     return null;
   },
+
   hashPassword(password) {
     return bcrypt.hash(password, 12);
   },
+
+  serializeUsers(restaurants) {
+    return restaurants.map(this.serializeUser);
+  },
+
   serializeUser(restaurant) {
     return {
       id: restaurant.id,
       name: xss(restaurant.name),
-      email: xss(email),
+      email: xss(restaurant.email),
+      password: restaurant.password,
       phone: xss(restaurant.phone),
       street_address: xss(restaurant.street_address),
       city: xss(restaurant.city),
       state: xss(restaurant.state),
       zipcode: xss(restaurant.zipcode)
     };
-  },
-  // urlifyName(name) {
-  //   name = name.toLowerCase().trim()
-  //   name = 
-  // }
+  }
 }
 
 module.exports = RestaurantsService;
