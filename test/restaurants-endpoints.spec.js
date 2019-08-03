@@ -67,7 +67,7 @@ describe('Restaurants Endpoints', () => {
   // });
 
   describe('GET /api/restaurants/:restaurant_id', () => {
-    context('Given restaurant with ID that does\'nt exist', () => {
+    context('Given restaurant with ID that doesn\'t exist', () => {
       beforeEach(() => {
         helpers.seedRestaurants(db, testRestaurants);
       });

@@ -154,6 +154,7 @@ function makeExpectedRestaurant(restaurants, restaurant) {
     name: restaurant.name,
     email: restaurant.email,
     password: restaurant.password,
+    phone: restaurant.phone,
     street_address: restaurant.street_address,
     city: restaurant.city,
     state: restaurant.state,
@@ -161,7 +162,20 @@ function makeExpectedRestaurant(restaurants, restaurant) {
   };
 }
 
-// function makeExpectedCustomer() {}
+function makeExpectedCustomer(customers, customer) {
+  // const customer = customers.find(customer => customer.id === customers.id)
+
+  return {
+    id: customer.id,
+    name: customer.name,
+    email: customer.email,
+    phone: customer.phone,
+    street_address: customer.street_address,
+    city: customer.city,
+    state: customer.state,
+    zipcode: customer.zipcode
+  };
+}
 
 function makeMaliciousRestaurant(restaurant) {
   const maliciousRestaurant = {
@@ -169,6 +183,7 @@ function makeMaliciousRestaurant(restaurant) {
     name: 'Uh-oh',
     email: 'Naughty naughty very naughty <script>alert("xss");</script>',
     password: 'Password123!',
+    phone: '000-000-0000',
     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
     city: 'City Name',
     state: 'State',
@@ -189,15 +204,18 @@ function makeMaliciousCustomer(customer) {
   const maliciousCustomer = {
     id: 911,
     first_name: 'Uh-oh',
-    last_name: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    last_name: 'Spaghetti-Os',
+    email: 'Naughty naughty very naughty <script>alert("xss");</script>',
+    phone: '000-000-0000',
     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
     city: 'City Name',
     state: 'State',
     zipcode: '00000'
   };
+  
   const expectedCustomer = {
-    ...makeMaliciousRestaurant([customer], maliciousCustomer),
-    last_name: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
+    ...makeExpectedCustomer([customer], maliciousCustomer),
+    email: 'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;',
     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
   };
   return {
@@ -218,10 +236,10 @@ function cleanTables(db) {
   return db.transaction(trx => {
     trx.raw(
       `TRUNCATE
+        orders,
         restaurants,
         pizzas,
-        customers,
-        orders`
+        customers`
     )
       .then(() => {
         Promise.all([

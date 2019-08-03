@@ -1,6 +1,6 @@
 TRUNCATE
+  orders,
   restaurants,
   pizzas,
-  customers,
-  orders
+  customers
   RESTART IDENTITY CASCADE;
