@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
+const authRouter = require('./authorization/auth-router');
 const restaurantsRouter = require('./restaurants/restaurants-router');
 const pizzasRouter = require('./pizzas/pizzas-router');
 const customersRouter = require('./customers/customers-router');
@@ -19,6 +20,7 @@ app.use(cors());
 app.options('*', cors());
 app.use(helmet());
 
+app.use('/api/authorization', authRouter);
 app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/pizzas', pizzasRouter);
 app.use('/api/customers', customersRouter);
