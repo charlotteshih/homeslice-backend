@@ -6,5 +6,3 @@ DROP TABLE IF EXISTS customers;
 DROP TYPE IF EXISTS size_options;
 DROP TYPE IF EXISTS pizza_types;
 DROP TYPE IF EXISTS order_status;
-
-DELETE DATABASE homeslice;
