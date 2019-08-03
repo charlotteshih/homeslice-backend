@@ -58,5 +58,5 @@ CREATE TABLE orders (
   customer_id INTEGER REFERENCES customers(id) ON DELETE CASCADE NOT NULL,
   date_created TIMESTAMP DEFAULT NOW() NOT NULL,
   order_status order_status NOT NULL,
-  order_total INTEGER NOT NULL
+  order_total NUMERIC(4,2) NOT NULL
 );
