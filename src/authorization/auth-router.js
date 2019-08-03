@@ -18,7 +18,7 @@ authRouter
     AuthService.getUserWithEmail(req.app.get('db'), loginEmail.email)
       .then(dbUser => {
         if (!dbUser) {
-          return res.status(400).json({ error: 'Incorrect email or password.' });
+          return res.status(400).json({ error: 'User does not exist!' });
         }
 
         return AuthService.comparePaswords(loginEmail.password, dbUser.password)
