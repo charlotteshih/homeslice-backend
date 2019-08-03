@@ -54,7 +54,8 @@ const CustomersService = {
       street_address: xss(customer.street_address),
       city: xss(customer.city),
       state: xss(customer.state),
-      zipcode: xss(customer.zipcode)
+      zipcode: xss(customer.zipcode),
+      notes: xss(customer.notes)
     };
   }
 };
