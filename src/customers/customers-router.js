@@ -74,7 +74,7 @@ async function checkCustomerExists(req, res, next) {
 
     if(!customer) {
       return res.status(404).json({
-        error: 'Customer doesn\'nt exist.'
+        error: 'Customer doesn\'t exist.'
       });
     }
 
