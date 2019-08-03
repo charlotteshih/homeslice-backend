@@ -3,7 +3,7 @@ const path = require("path");
 const OrdersService = require("./orders-service");
 
 const ordersRouter = express.Router();
-const jsonParser = express.json();
+const jsonBodyParser = express.json();
 
 ordersRouter.route("/").get((req, res, next) => {
   OrdersService.getAllOrders(req.app.get("db"))
@@ -20,7 +20,7 @@ ordersRouter
     res.json(OrdersService.serializeOrder(res.order));
   });
 
-ordersRouter.route("/").post(jsonParser, (req, res, next) => {
+ordersRouter.route("/").post(jsonBodyParser, (req, res, next) => {
   const {
     restaurant_id,
     pizza_id,
@@ -38,7 +38,7 @@ ordersRouter.route("/").post(jsonParser, (req, res, next) => {
     order_status,
     order_total
   };
-
+  // checks that all keys are included in request body (except date_created, which should only be included if you want the date to be something other than now)
   for (const [key, value] of Object.entries(newOrder)) {
     if (value == null && value !== date_created) {
       return res.status(400).json({
@@ -54,10 +54,39 @@ ordersRouter.route("/").post(jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-// ordersRouter
-// .route('/:order_id')
-// .all(checkOrderExists)
-// .patch()
+ordersRouter
+  .route("/:order_id")
+  .all(checkOrderExists)
+  .patch(jsonBodyParser, (req, res, next) => {
+    const newFields = {};
+    for (let field in req.body) {
+      newFields[field] = req.body[field];
+    }
+    console.log("newFields", newFields);
+
+    if (newFields == null) {
+      return res.status(400).json({
+        error: { message: `Request body must contain fields to update.` }
+      });
+    }
+
+    OrdersService.updateOrder(req.app.get("db"), req.params.order_id, newFields)
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
+
+ordersRouter
+  .route("/:order_id")
+  .all(checkOrderExists)
+  .delete((req, res, next) => {
+    OrdersService.deleteOrder(req.app.get("db"), req.params.order_id)
+      .then(() => {
+        res.status(204).end();
+      })
+      .catch(next);
+  });
 
 async function checkOrderExists(req, res, next) {
   try {

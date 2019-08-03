@@ -36,23 +36,22 @@ const OrdersService = {
       .then(([order]) => order);
   },
   // updates order_status and order_total only
-  updateOrder(db, order) {
+  updateOrder(db, id, newOrderFields) {
     return db
       .from("orders")
-      .where({ id: order.id })
+      .where({ id: id })
       .update({
-        order_status: order.order_status,
-        order_total: order.order_total
+        ...newOrderFields
       })
       .returning("*")
       .then(([order]) => order);
   },
 
-  deleteOrder(db, order) {
+  deleteOrder(db, id) {
     return db
       .from("orders")
-      .where({ id: order.id })
-      .del();
+      .where({ id: id })
+      .delete();
   },
 
   serializeOrder(order) {
