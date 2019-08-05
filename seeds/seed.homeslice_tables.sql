@@ -13,9 +13,9 @@ VALUES
   ('Demo', 'demo@demo.com', 'Demo123!', '000-000-0000', '123 Pizza Way', 'Flavortown', 'CA', '90027'),
   ('Luigi''s Pizzeria', 'luigis@luigispizza.com', 'Luigi123!', '555-555-5555', '123 Pizza Avenue', 'Flavortown', 'CA', '90004');
 
-INSERT INTO pizzas (size, type)
+INSERT INTO pizzas (size, type, price)
 VALUES
-  ('X-Large', 'Supreme');
+  ('X-Large', 'Supreme', 20.30);
 
 INSERT INTO customers (first_name, last_name, email, phone, street_address, city, state, zipcode, notes)
 VALUES
