@@ -1,10 +1,10 @@
 const express = require('express');
-const AuthService = require('./auth-service');
+const AdminService = require('./admin-service');
 
-const authRouter = express.Router();
+const adminRouter = express.Router();
 const jsonBodyParser = express.json();
 
-authRouter
+adminRouter
   .post('/login', jsonBodyParser, (req, res, next) => {
     const { email, password } = req.body;
     const loginEmail = { email, password };
@@ -15,24 +15,24 @@ authRouter
       }
     }
 
-    AuthService.getUserWithEmail(req.app.get('db'), loginEmail.email)
-      .then(dbUser => {
-        if (!dbUser) {
-          return res.status(400).json({ error: 'User does not exist!' });
+    AdminService.getAdmin(req.app.get('db'), loginEmail.email)
+      .then(adminUser => {
+        if (!adminUser) {
+          return res.status(400).json({ error: 'User does not exist! '});
         }
 
-        return AuthService.comparePaswords(loginEmail.password, dbUser.password)
+        return AdminService.comparePaswords(loginEmail.password, adminUser.password)
           .then(compareMatch => {
             if (!compareMatch) {
               return res.status(400).json({ error: 'Incorrect email or password. '});
             }
 
-            const sub = dbUser.email;
-            const payload = { restaurant_id: dbUser.id };
-            res.send({ authToken: AuthService.createJwt(sub, payload) });
+            const sub = adminUser.email;
+            const payload = { admin_id: adminUser.id };
+            res.send({ authToken: AdminService.createJwt(sub, payload) });
           });
       })
       .catch(next);
   });
 
-module.exports = authRouter;
+module.exports = adminRouter;
