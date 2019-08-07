@@ -9,13 +9,12 @@ TRUNCATE
 
 INSERT INTO restaurants (name, email, password, phone, street_address, city, state, zipcode)
 VALUES
-  ('Admin', 'admin@homeslice.com', 'Admin123!', '000-000-0000', '123 Pizza Way', 'Flavortown', 'CA', '90027'),
-  ('Demo', 'demo@demo.com', 'Demo123!', '000-000-0000', '123 Pizza Way', 'Flavortown', 'CA', '90027'),
-  ('Luigi''s Pizzeria', 'luigis@luigispizza.com', 'Luigi123!', '555-555-5555', '123 Pizza Avenue', 'Flavortown', 'CA', '90004');
+  ('Demo', 'demo@demo.com', '$2y$12$WspO0e0AQLsW2mkN.ha/lep16QK15fjzhYJd.qFYjs3K9Utwnkm3a', '000-000-0000', '123 Pizza Way', 'Flavortown', 'CA', '90027'),
+  ('Luigi''s Pizzeria', 'luigis@luigispizza.com', '$2y$12$04vyO/KPoAhA.3xr2RLhJO9.Eo/j2gmGg6teWkwx.iQ7rwit6UOIO', '555-555-5555', '123 Pizza Avenue', 'Flavortown', 'CA', '90004');
 
-INSERT INTO pizzas (size, type)
+INSERT INTO pizzas (size, type, price)
 VALUES
-  ('X-Large', 'Supreme');
+  ('X-Large', 'Supreme', 20.30);
 
 INSERT INTO customers (first_name, last_name, email, phone, street_address, city, state, zipcode, notes)
 VALUES
@@ -24,5 +23,9 @@ VALUES
 INSERT INTO orders (restaurant_id, pizza_id, customer_id, order_status, order_total)
 VALUES
   (1, 1, 1, 'Ordered', 10.50);
+
+INSERT INTO admin (email, password)
+VALUES
+  ('Admin', '$2y$12$8Xwa31EFSk/cGJip1.rZD.1eYJrluEY.ndZOi1bE3NT6D7aoufU5a');
 
 COMMIT;

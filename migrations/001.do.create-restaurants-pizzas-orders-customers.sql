@@ -36,7 +36,8 @@ CREATE TABLE restaurants (
 CREATE TABLE pizzas (
   id SERIAL PRIMARY KEY,
   size size_options NOT NULL,
-  type pizza_types NOT NULL
+  type pizza_types NOT NULL,
+  price NUMERIC NOT NUll
 );
 
 CREATE TABLE customers (

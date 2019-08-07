@@ -1,7 +1,11 @@
-const express = require("express");
-const path = require("path");
-const RestaurantsService = require("./restaurants-service");
-const requireAuth = require("../middleware/jwt-auth");
+
+
+
+const express = require('express');
+const path = require('path');
+const RestaurantsService = require('./restaurants-service');
+const { requireAuth, requireAdminAuth } = require('../middleware/jwt-auth');
+
 
 const restaurantsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -90,8 +94,9 @@ restaurantsRouter
   .get((req, res) => {
     return res.json(RestaurantsService.serializeUser(res.restaurant));
   })
-  .patch(jsonBodyParser, (req, res, next) => {
-    const db = req.app.get("db");
+
+  .patch(requireAuth, jsonBodyParser, (req, res, next) => {
+    const db = req.app.get('db');
     const restaurant_id = req.params.restaurant_id;
     const restaurant = req.body;
     const restaurantToUpdate = restaurant;
@@ -110,8 +115,13 @@ restaurantsRouter
       .then(numRowsAffected => res.status(204).end())
       .catch(next);
   })
-  .delete((req, res, next) => {
-    RestaurantsService.removeUser(req.app.get("db"), req.params.restaurant_id)
+
+  .delete(requireAdminAuth, (req, res, next) => {
+    RestaurantsService.removeUser(
+      req.app.get('db'),
+      req.params.restaurant_id
+    )
+
       .then(numRowsAffected => res.status(204).end())
       .catch(next);
   });
