@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const RestaurantsService = require("./restaurants-service");
+const requireAuth = require("../middleware/jwt-auth");
 
 const restaurantsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -114,7 +115,7 @@ restaurantsRouter
       .then(numRowsAffected => res.status(204).end())
       .catch(next);
   });
-
+// returns all orders and customers for a given restaurant ID
 restaurantsRouter
   .route("/orders-for-restaurant/:restaurant_id")
   .all(checkRestaurantExists)
