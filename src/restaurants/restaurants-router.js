@@ -1,19 +1,15 @@
-
-
-
 const express = require('express');
 const path = require('path');
 const RestaurantsService = require('./restaurants-service');
 const { requireAuth, requireAdminAuth } = require('../middleware/jwt-auth');
 
-
 const restaurantsRouter = express.Router();
 const jsonBodyParser = express.json();
 
 restaurantsRouter
-  .route("/")
+  .route('/')
   .get((req, res, next) => {
-    RestaurantsService.getAllRestaurants(req.app.get("db"))
+    RestaurantsService.getAllRestaurants(req.app.get('db'))
       .then(restaurants => {
         res.json(RestaurantsService.serializeUsers(restaurants));
       })
@@ -32,14 +28,14 @@ restaurantsRouter
     } = req.body;
 
     for (const field of [
-      "name",
-      "email",
-      "password",
-      "phone",
-      "street_address",
-      "city",
-      "state",
-      "zipcode"
+      'name',
+      'email',
+      'password',
+      'phone',
+      'street_address',
+      'city',
+      'state',
+      'zipcode'
     ]) {
       if (!req.body[field]) {
         return res.status(400).json({
@@ -54,10 +50,10 @@ restaurantsRouter
       return res.status(400).json({ error: passwordError });
     }
 
-    RestaurantsService.hasUserWithUserName(req.app.get("db"), email)
+    RestaurantsService.hasUserWithUserName(req.app.get('db'), email)
       .then(hasUserWithEmail => {
         if (hasUserWithEmail) {
-          return res.status(400).json({ error: `email already taken.` });
+          return res.status(400).json({ error: `Email is already in use.` });
         }
 
         return RestaurantsService.hashPassword(password).then(
@@ -74,7 +70,7 @@ restaurantsRouter
             };
 
             return RestaurantsService.insertUser(
-              req.app.get("db"),
+              req.app.get('db'),
               newUser
             ).then(restaurant => {
               res
@@ -89,7 +85,7 @@ restaurantsRouter
   });
 
 restaurantsRouter
-  .route("/:restaurant_id")
+  .route('/:restaurant_id')
   .all(checkRestaurantExists)
   .get((req, res) => {
     return res.json(RestaurantsService.serializeUser(res.restaurant));
@@ -106,7 +102,7 @@ restaurantsRouter
     if (numberOfValues === 0) {
       return res.status(400).json({
         error: {
-          message: "Request body is empty."
+          message: 'Request body is empty.'
         }
       });
     }
@@ -127,16 +123,16 @@ restaurantsRouter
   });
 // returns all orders and customers for a given restaurant ID
 restaurantsRouter
-  .route("/:restaurant_id/orders")
+  .route('/:restaurant_id/orders')
   .all(checkRestaurantExists)
   .get(requireAuth, (req, res) => {
     Promise.all([
       RestaurantsService.getOrdersForRestaurant(
-        req.app.get("db"),
+        req.app.get('db'),
         req.params.restaurant_id
       ),
       RestaurantsService.getCustomersForRestaurant(
-        req.app.get("db"),
+        req.app.get('db'),
         req.params.restaurant_id
       )
     ]).then(information => {
@@ -147,13 +143,13 @@ restaurantsRouter
 async function checkRestaurantExists(req, res, next) {
   try {
     const restaurant = await RestaurantsService.getRestaurantById(
-      req.app.get("db"),
+      req.app.get('db'),
       req.params.restaurant_id
     );
 
     if (!restaurant) {
       return res.status(404).json({
-        error: "Restaurant doesn't exist."
+        error: 'Restaurant doesn\'t exist.'
       });
     }
 
