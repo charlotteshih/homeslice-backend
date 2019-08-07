@@ -16,14 +16,14 @@ pizzasRouter
     const { size , type } = req.body;
     //TODO add logic to calculate pizza price depending on size and type.
     const price = 5;
-    const newPizza = {
+      const newPizza = {
       size,
       type,
       price,
     };
     PizzasService.createPizza(req.app.get('db'), newPizza)
       .then(returning => {
-        res.status(201).json(returning);
+        res.status(201).json(returning[0]);
       })
   });
   
