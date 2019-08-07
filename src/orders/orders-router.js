@@ -49,7 +49,7 @@ ordersRouter.route("/").post(jsonBodyParser, (req, res, next) => {
 
   OrdersService.insertOrder(req.app.get("db"), newOrder)
     .then(order => {
-      res.status(201).json({ order });
+      res.status(201).json({ ...order });
     })
     .catch(next);
 });
