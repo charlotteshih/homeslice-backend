@@ -127,9 +127,9 @@ restaurantsRouter
   });
 // returns all orders and customers for a given restaurant ID
 restaurantsRouter
-  .route("/orders-for-restaurant/:restaurant_id")
+  .route("/:restaurant_id/orders")
   .all(checkRestaurantExists)
-  .get((req, res) => {
+  .get(requireAuth, (req, res) => {
     Promise.all([
       RestaurantsService.getOrdersForRestaurant(
         req.app.get("db"),

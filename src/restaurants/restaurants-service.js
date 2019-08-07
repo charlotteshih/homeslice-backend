@@ -46,7 +46,17 @@ const RestaurantsService = {
   },
 
   getOrdersForRestaurant(db, requested_restaurant_id) {
-    return db("orders").where({ restaurant_id: requested_restaurant_id });
+    return db("orders")
+      .where({ restaurant_id: requested_restaurant_id })
+      .join('pizzas', { 'orders.pizza_id': 'pizzas.id' })
+      .select(
+        'orders.id',
+        'orders.date_created',
+        'pizzas.size AS pizza_size',
+        'pizzas.type AS pizza_type',
+        'orders.order_status',
+        'orders.order_total'
+      );
   },
 
   getCustomersForRestaurant(db, requested_restaurant_id) {
