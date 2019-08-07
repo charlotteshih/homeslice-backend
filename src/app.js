@@ -11,14 +11,13 @@ const pizzasRouter = require('./pizzas/pizzas-router');
 const customersRouter = require('./customers/customers-router');
 const ordersRouter = require("./orders/orders-router");
 
-
 const app = express();
 
 const morganOption = NODE_ENV === "production" ? "tiny" : "common";
 
 app.use(morgan(morganOption));
 app.use(cors());
-app.options("*", cors());
+app.options('*', cors());
 app.use(helmet());
 
 app.use('/api/admin', adminRouter);
@@ -27,7 +26,6 @@ app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/pizzas', pizzasRouter);
 app.use('/api/customers', customersRouter);
 app.use("/api/orders", ordersRouter);
-
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
