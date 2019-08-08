@@ -125,7 +125,7 @@ restaurantsRouter
 restaurantsRouter
   .route('/:restaurant_id/orders')
   .all(checkRestaurantExists)
-  .get(requireAuth, (req, res) => {
+  .get((req, res) => {
     Promise.all([
       RestaurantsService.getOrdersForRestaurant(
         req.app.get('db'),
