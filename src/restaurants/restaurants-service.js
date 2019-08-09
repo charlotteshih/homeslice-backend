@@ -60,13 +60,6 @@ const RestaurantsService = {
       .delete();
   },
 
-  hasRestaurantWithEmail(db, email) {
-    return db("restaurants")
-      .where({ email })
-      .first()
-      .then(Boolean(restaurant));
-  },
-
   getOrdersForRestaurant(db, requested_restaurant_id) {
     return db("orders")
       .where({ restaurant_id: requested_restaurant_id })

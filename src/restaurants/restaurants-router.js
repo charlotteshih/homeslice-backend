@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const RestaurantsService = require("./restaurants-service");
 const { requireAuth } = require("../middleware/jwt-auth");
-const { requireAdminAuth } = require("../middleware/jwt-admin-auth");
+const { hasEmailInDb } = require("../middleware/registration");
 
 const restaurantsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -44,9 +44,9 @@ restaurantsRouter
       return res.status(400).json({ error: passwordError });
     }
 
-    RestaurantsService.hasRestaurantWithEmail(req.app.get("db"), email)
-      .then(hasRestaurantWithEmail => {
-        if (hasRestaurantWithEmail) {
+    hasEmailInDb(req.app.get("db"), email)
+      .then(hasEmail => {
+        if (hasEmail) {
           return res
             .status(400)
             .json({ error: { message: `Email is already in use.` } });
@@ -129,12 +129,10 @@ restaurantsRouter
         req.params.restaurant_id
       )
     ]).then(([ordersForRestaurant, customersForRestaurant]) => {
-      res
-        .status(200)
-        .json({
-          orders: ordersForRestaurant,
-          customers: customersForRestaurant
-        });
+      res.status(200).json({
+        orders: ordersForRestaurant,
+        customers: customersForRestaurant
+      });
     });
   });
 

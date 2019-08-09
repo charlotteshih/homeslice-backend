@@ -1,22 +1,22 @@
-const AuthService = require('../authorization/auth-service');
-const AdminService = require('../admin/admin-service');
+const AuthService = require("../authorization/auth-service");
+const AdminService = require("../admin/admin-service");
 
 function requireAuth(req, res, next) {
-  const authToken = req.get('Authorization') || '';
-  let bearerToken = '';
+  const authToken = req.get("Authorization") || "";
+  let bearerToken = "";
 
-  if (!authToken.toLowerCase().startsWith('bearer ')) {
-    return res.status(401).json({ error: 'Missing bearer token.' });
+  if (!authToken.toLowerCase().startsWith("bearer ")) {
+    return res.status(401).json({ error: "Missing bearer token." });
   } else {
     bearerToken = authToken.slice(7, authToken.length);
   }
 
   try {
     const payload = AuthService.verifyJwt(bearerToken);
-    AuthService.getUserWithEmail(req.app.get('db'), payload.sub)
+    AuthService.getUserWithEmail(req.app.get("db"), payload.sub)
       .then(user => {
         if (!user) {
-          return res.status(401).json({ error: 'Unauthorized request.' });
+          return res.status(401).json({ error: "Unauthorized request." });
         }
         req.user = user;
         next();
@@ -24,39 +24,8 @@ function requireAuth(req, res, next) {
       .catch(err => {
         next(err);
       });
-  } catch(error) {
-    res.status(401).json({ error: 'Unauthorized request.' });
+  } catch (error) {
+    res.status(401).json({ error: "Unauthorized request." });
   }
 }
-
-function requireAdminAuth(req, res, next) {
-  const authToken = req.get('Authorization') || '';
-  let bearerToken = '';
-
-  if (!authToken.toLowerCase().startsWith('bearer ')) {
-    return res.status(401).json({ error: 'Missing bearer token.' });
-  } else {
-    bearerToken = authToken.slice(7, authToken.length);
-  }
-
-  try {
-    const payload = AdminService.verifyJwt(bearerToken);
-
-    AdminService.getAdmin(req.app.get('db'), payload.sub)
-      .then(user => {
-        if (!user) {
-          return res.status(401).json({ error: 'Unauthorized request.' });
-        }
-        req.user = user;
-        next();
-      })
-      .catch(err => {
-        console.error(error);
-        next(err);
-      });
-  } catch(error) {
-    res.status(401).json({ error: 'Unauthorized request.'});
-  }
-}
-
-module.exports = { requireAuth, requireAdminAuth };
+module.exports = { requireAuth };
