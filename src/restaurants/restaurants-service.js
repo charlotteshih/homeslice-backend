@@ -1,114 +1,118 @@
-const bcrypt = require('bcryptjs');
-const xss = require('xss');
+const bcrypt = require("bcryptjs");
+const xss = require("xss");
 
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 const RestaurantsService = {
   getAllRestaurants(db) {
-    return db.from('restaurants').select(
-      'id',
-      'name',
-      'email',
-      'phone',
-      'street_address',
-      'city',
-      'state',
-      'zipcode'
-    );
+    return db
+      .from("restaurants")
+      .select(
+        "id",
+        "name",
+        "email",
+        "phone",
+        "street_address",
+        "city",
+        "state",
+        "zipcode"
+      );
   },
 
   getRestaurantById(db, id) {
     return db
-      .from('restaurants')
+      .from("restaurants")
       .select(
-        'id',
-        'name',
-        'email',
-        'phone',
-        'street_address',
-        'city',
-        'state',
-        'zipcode'
+        "id",
+        "name",
+        "email",
+        "phone",
+        "street_address",
+        "city",
+        "state",
+        "zipcode"
       )
-      .where('restaurants.id', id)
+      .where({ id })
       .first();
   },
 
-  insertUser(db, newUser) {
+  insertRestaurant(db, newRestaurant) {
     return db
-      .insert(newUser)
-      .into('restaurants')
-      .returning('*')
-      .then(([user]) => user);
+      .insert(newRestaurant)
+      .into("restaurants")
+      .returning("*")
+      .then(restaurantArr => restaurantArr[0]);
   },
 
-  updateUser(db, id, newUserFields) {
+  updateRestaurant(db, id, newRestaurantFields) {
     return db
-      .from('restaurants')
+      .from("restaurants")
       .where({ id })
-      .update(newUserFields);
+      .update(newRestaurantFields)
+      .returning("*")
+      .then(restaurantArr => restaurantArr[0]);
   },
 
-  removeUser(db, id) {
+  removeRestaurant(db, id) {
     return db
-      .from('restaurants')
+      .from("restaurants")
       .where({ id })
       .delete();
   },
 
-  hasUserWithUserName(db, email) {
-    return db('restaurants')
+  hasRestaurantWithEmail(db, email) {
+    return db("restaurants")
       .where({ email })
       .first()
-      .then(user => !!user);
+      .then(Boolean(restaurant));
   },
 
   getOrdersForRestaurant(db, requested_restaurant_id) {
-    return db('orders')
+    return db("orders")
       .where({ restaurant_id: requested_restaurant_id })
-      .join('pizzas', { 'orders.pizza_id': 'pizzas.id' })
+      .join("pizzas", { "orders.pizza_id": "pizzas.id" })
       .select(
-        'orders.id',
-        'orders.date_created',
-        'pizzas.size AS pizza_size',
-        'pizzas.type AS pizza_type',
-        'orders.order_status',
-        'orders.order_total'
+        "orders.id",
+        "orders.date_created",
+        "pizzas.size AS pizza_size",
+        "pizzas.type AS pizza_type",
+        "orders.order_status",
+        "orders.order_total"
       );
   },
 
   getCustomersForRestaurant(db, requested_restaurant_id) {
-    return db('customers')
-      .join('orders', {
-        'customers.id': 'orders.customer_id'
+    return db("customers")
+      .join("orders", {
+        "customers.id": "orders.customer_id"
       })
-      .join('restaurants', { 'orders.restaurant_id': 'restaurants.id' })
+      .join("restaurants", { "orders.restaurant_id": "restaurants.id" })
       .where({ restaurant_id: requested_restaurant_id })
       .select(
-        'customers.id',
-        'customers.first_name',
-        'customers.last_name',
-        'customers.email',
-        'customers.phone',
-        'customers.street_address',
-        'customers.city',
-        'customers.state',
-        'customers.zipcode'
+        "customers.id",
+        "customers.first_name",
+        "customers.last_name",
+        "customers.email",
+        "customers.phone",
+        "customers.street_address",
+        "customers.city",
+        "customers.state",
+        "customers.zipcode"
       );
   },
 
   validatePassword(password) {
     if (password.length < 8) {
-      return 'Password must be longer than 8 characters.';
+      return "Password must be longer than 8 characters.";
     }
     if (password.length > 72) {
-      return 'Password must be shorter than 72 characters.';
+      return "Password must be shorter than 72 characters.";
     }
-    if (password.startsWith(' ') || password.endsWith(' ')) {
-      return 'Password must not start or end with empty spaces.';
+    if (password.startsWith(" ") || password.endsWith(" ")) {
+      return "Password must not start or end with empty spaces.";
     }
     if (!REGEX_UPPER_LOWER_NUMBER_SPECIAL.test(password)) {
-      return 'Password must contain one uppercase, lowercase, number, and special character.';
+      return "Password must contain one uppercase, lowercase, number, and special character.";
     }
     return null;
   },
@@ -117,11 +121,11 @@ const RestaurantsService = {
     return bcrypt.hash(password, 12);
   },
 
-  serializeUsers(restaurants) {
-    return restaurants.map(this.serializeUser);
+  serializeMultipleRestaurants(restaurants) {
+    return restaurants.map(this.serializeRestaurant);
   },
 
-  serializeUser(restaurant) {
+  serializeRestaurant(restaurant) {
     return {
       id: restaurant.id,
       name: xss(restaurant.name),

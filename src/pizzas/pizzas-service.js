@@ -1,34 +1,34 @@
 const PizzasService = {
   getAllPizzas(db) {
-    return db
-      .from('pizzas')
-      .select('*');
+    return db.from("pizzas").select("*");
   },
   getPizzaById(db, id) {
     return db
-      .from('pizzas')
-      .select('*')
+      .from("pizzas")
+      .select("*")
       .where({ id });
   },
   createPizza(db, newPizza) {
     return db
-      .into('pizzas')
+      .into("pizzas")
       .insert(newPizza)
-      .returning('*');
+      .returning("*")
+      .then(pizzaArr => pizzaArr[0]);
   },
-  updatePizza(db, id, dataToUpdate ) {
+  updatePizza(db, id, dataToUpdate) {
     return db
-      .from('pizzas')
+      .from("pizzas")
       .where({ id })
       .update(dataToUpdate)
-      .returning('*');
-  }, 
+      .returning("*")
+      .then(pizzaArr => pizzaArr[0]);
+  },
   deletePizzaById(db, id) {
     return db
-      .from('pizzas')
+      .from("pizzas")
       .where({ id })
       .delete();
   }
-}
+};
 
 module.exports = PizzasService;
