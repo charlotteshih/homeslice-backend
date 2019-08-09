@@ -9,14 +9,7 @@ const AdminService = {
       .first();
   },
 
-  parseBasicToken(token) {
-    return Buffer
-      .from(token, 'base64')
-      .toString()
-      .split(':');
-  },
-
-  comparePaswords(password, hash) {
+  comparePasswords(password, hash) {
     return bcrypt.compare(password, hash);
   },
 

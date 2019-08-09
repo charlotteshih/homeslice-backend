@@ -11,7 +11,7 @@ const CustomersService = {
     return db
       .from('customers')
       .select('*')
-      .where('customers.id', id)
+      .where({ id })
       .first();
   },
 
@@ -20,10 +20,8 @@ const CustomersService = {
       .insert(newCust)
       .into('customers')
       .returning('*')
-      .then(([customer]) => customer)
-      .then(customer =>
-        CustomersService.getById(db, customer.id)
-      );
+      .then(customerArr => customerArr[0])
+      .then(customer => CustomersService.getById(db, customer.id));
   },
 
   updateCustomer(db, id, newCustomerFields) {
@@ -40,7 +38,7 @@ const CustomersService = {
       .delete();
   },
 
-  serializeCustomers(customers) {
+  serializeMultipleCustomers(customers) {
     return customers.map(this.serializeCustomer);
   },
 

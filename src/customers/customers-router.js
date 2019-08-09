@@ -9,7 +9,7 @@ customersRouter.route('/')
   .get((req, res, next) => {
     CustomersService.getAllCustomers(req.app.get('db'))
       .then(customers => {
-        res.json(CustomersService.serializeCustomers(customers));
+        res.status(200).json(CustomersService.serializeMultipleCustomers(customers));
       })
       .catch(next);
   })
@@ -34,9 +34,9 @@ customersRouter.route('/')
   })
 
 customersRouter.route('/:customer_id')
-  .all(checkCustomerExists)
+  .all(_checkCustomerExists)
   .get((req, res) => {
-    return res.json(CustomersService.serializeCustomer(res.customer));
+    return res.status(200).json(CustomersService.serializeCustomer(res.customer));
   })
   .patch(jsonBodyParser, (req, res, next) => {
     const db = req.app.get('db');
@@ -65,7 +65,7 @@ customersRouter.route('/:customer_id')
       .catch(next);
   })
 
-async function checkCustomerExists(req, res, next) {
+async function _checkCustomerExists(req, res, next) {
   try {
     const customer = await CustomersService.getById(
       req.app.get('db'),
