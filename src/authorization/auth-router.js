@@ -21,7 +21,7 @@ authRouter
           return res.status(400).json({ error: 'User does not exist!' });
         }
 
-        return AuthService.comparePaswords(loginEmail.password, dbUser.password)
+        return AuthService.comparePasswords(loginEmail.password, dbUser.password)
           .then(compareMatch => {
             if (!compareMatch) {
               return res.status(400).json({ error: 'Incorrect email or password. '});

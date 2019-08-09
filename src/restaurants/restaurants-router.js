@@ -1,17 +1,20 @@
-const express = require('express');
-const path = require('path');
-const RestaurantsService = require('./restaurants-service');
-const { requireAuth, requireAdminAuth } = require('../middleware/jwt-auth');
+const express = require("express");
+const path = require("path");
+const RestaurantsService = require("./restaurants-service");
+const { requireAuth } = require("../middleware/jwt-auth");
+const { requireAdminAuth } = require("../middleware/jwt-admin-auth");
 
 const restaurantsRouter = express.Router();
 const jsonBodyParser = express.json();
 
 restaurantsRouter
-  .route('/')
+  .route("/")
   .get((req, res, next) => {
-    RestaurantsService.getAllRestaurants(req.app.get('db'))
+    RestaurantsService.getAllRestaurants(req.app.get("db"))
       .then(restaurants => {
-        res.json(RestaurantsService.serializeUsers(restaurants));
+        res
+          .status(200)
+          .json(RestaurantsService.serializeMultipleRestaurants(restaurants));
       })
       .catch(next);
   })
@@ -27,19 +30,10 @@ restaurantsRouter
       zipcode
     } = req.body;
 
-    for (const field of [
-      'name',
-      'email',
-      'password',
-      'phone',
-      'street_address',
-      'city',
-      'state',
-      'zipcode'
-    ]) {
-      if (!req.body[field]) {
+    for (let [key, value] of Object.entries(req.body)) {
+      if (value === null) {
         return res.status(400).json({
-          error: `Missing ${field} in request body`
+          error: { message: `Missing '${key}' in request body.` }
         });
       }
     }
@@ -50,33 +44,35 @@ restaurantsRouter
       return res.status(400).json({ error: passwordError });
     }
 
-    RestaurantsService.hasUserWithUserName(req.app.get('db'), email)
-      .then(hasUserWithEmail => {
-        if (hasUserWithEmail) {
-          return res.status(400).json({ error: `Email is already in use.` });
+    RestaurantsService.hasRestaurantWithEmail(req.app.get("db"), email)
+      .then(hasRestaurantWithEmail => {
+        if (hasRestaurantWithEmail) {
+          return res
+            .status(400)
+            .json({ error: { message: `Email is already in use.` } });
         }
 
         return RestaurantsService.hashPassword(password).then(
           hashedPassword => {
-            const newUser = {
+            const newRestaurant = {
               name: name.trim(),
-              email,
+              email: email.trim(),
               password: hashedPassword,
-              phone,
-              street_address,
-              city,
-              state,
-              zipcode
+              phone: phone.trim(),
+              street_address: street_address.trim(),
+              city: city.trim(),
+              state: state.trim(),
+              zipcode: zipcode.trim()
             };
 
             return RestaurantsService.insertUser(
-              req.app.get('db'),
-              newUser
+              req.app.get("db"),
+              newRestaurant
             ).then(restaurant => {
               res
                 .status(201)
                 .location(path.posix.join(req.originalUrl), `/${restaurant.id}`)
-                .json(RestaurantsService.serializeUser(restaurant));
+                .json(RestaurantsService.serializeRestaurant(restaurant));
             });
           }
         );
@@ -85,71 +81,73 @@ restaurantsRouter
   });
 
 restaurantsRouter
-  .route('/:restaurant_id')
-  .all(checkRestaurantExists)
+  .route("/:restaurant_id")
+  .all(_getRestaurantById)
   .get((req, res) => {
-    return res.json(RestaurantsService.serializeUser(res.restaurant));
+    return res
+      .status(200)
+      .json(RestaurantsService.serializeRestaurant(res.restaurant));
   })
 
   .patch(requireAuth, jsonBodyParser, (req, res, next) => {
-    const db = req.app.get('db');
-    const restaurant_id = req.params.restaurant_id;
-    const restaurant = req.body;
-    const restaurantToUpdate = restaurant;
-    const numberOfValues = Object.values(restaurantToUpdate).filter(Boolean)
-      .length;
+    const newFields = {};
+    for (let field in req.body) {
+      newFields[field] = req.body[field];
+    }
 
-    if (numberOfValues === 0) {
+    if (newFields == null) {
       return res.status(400).json({
-        error: {
-          message: 'Request body is empty.'
-        }
+        error: { message: `Request body must contain fields to update.` }
       });
     }
 
-    RestaurantsService.updateUser(db, restaurant_id, restaurantToUpdate)
-      .then(numRowsAffected => res.status(204).end())
+    RestaurantsService.updateRestaurant(db, restaurant_id, restaurantToUpdate)
+      .then(() => res.status(204).end())
       .catch(next);
   })
 
-  .delete(requireAdminAuth, (req, res, next) => {
-    RestaurantsService.removeUser(
-      req.app.get('db'),
+  .delete((req, res, next) => {
+    RestaurantsService.removeRestaurant(
+      req.app.get("db"),
       req.params.restaurant_id
     )
-
-      .then(numRowsAffected => res.status(204).end())
+      .then(() => res.status(204).end())
       .catch(next);
   });
 // returns all orders and customers for a given restaurant ID
 restaurantsRouter
-  .route('/:restaurant_id/orders')
-  .all(checkRestaurantExists)
+  .route("/:restaurant_id/orders")
+  .all(_getRestaurantById)
   .get((req, res) => {
     Promise.all([
       RestaurantsService.getOrdersForRestaurant(
-        req.app.get('db'),
+        req.app.get("db"),
         req.params.restaurant_id
       ),
       RestaurantsService.getCustomersForRestaurant(
-        req.app.get('db'),
+        req.app.get("db"),
         req.params.restaurant_id
       )
-    ]).then(information => {
-      res.json({ orders: information[0], customers: information[1] });
+    ]).then(([ordersForRestaurant, customersForRestaurant]) => {
+      res
+        .status(200)
+        .json({
+          orders: ordersForRestaurant,
+          customers: customersForRestaurant
+        });
     });
   });
 
-async function checkRestaurantExists(req, res, next) {
+async function _getRestaurantById(req, res, next) {
   try {
     const restaurant = await RestaurantsService.getRestaurantById(
-      req.app.get('db'),
+      req.app.get("db"),
       req.params.restaurant_id
     );
 
     if (!restaurant) {
       return res.status(404).json({
-        error: 'Restaurant doesn\'t exist.'
+        error: "Restaurant doesn't exist."
       });
     }
 

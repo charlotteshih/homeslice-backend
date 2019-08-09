@@ -16,7 +16,7 @@ const AuthService = {
       .split(':');
   },
 
-  comparePaswords(password, hash) {
+  comparePasswords(password, hash) {
     return bcrypt.compare(password, hash);
   },
 

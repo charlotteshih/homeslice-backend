@@ -21,7 +21,7 @@ adminRouter
           return res.status(400).json({ error: 'User does not exist! '});
         }
 
-        return AdminService.comparePaswords(loginEmail.password, adminUser.password)
+        return AdminService.comparePasswords(loginEmail.password, adminUser.password)
           .then(compareMatch => {
             if (!compareMatch) {
               return res.status(400).json({ error: 'Incorrect email or password. '});
