@@ -1,11 +1,13 @@
-CREATE TYPE size_options AS ENUM (
+CREATE TYPE size_options AS ENUM
+(
   'Small',
   'Medium',
   'Large',
   'X-Large'
 );
 
-CREATE TYPE pizza_types AS ENUM (
+CREATE TYPE pizza_types AS ENUM
+(
   'Cheese',
   'Pepperoni',
   'Supreme',
@@ -14,14 +16,19 @@ CREATE TYPE pizza_types AS ENUM (
   'BBQ Chicken'
 );
 
-CREATE TYPE order_status AS ENUM (
+CREATE TYPE order_status AS ENUM
+(
   'Ordered',
   'In Progress',
   'Ready For Pickup',
-  'Done'
+  'Completed',
+  'Canceled: Out of stock',
+  'Canceled: Customer request',
+  'Canceled: Other'
 );
 
-CREATE TABLE restaurants (
+CREATE TABLE restaurants
+(
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
@@ -33,14 +40,16 @@ CREATE TABLE restaurants (
   zipcode TEXT NOT NULL
 );
 
-CREATE TABLE pizzas (
+CREATE TABLE pizzas
+(
   id SERIAL PRIMARY KEY,
   size size_options NOT NULL,
   type pizza_types NOT NULL,
   price NUMERIC NOT NULL
 );
 
-CREATE TABLE customers (
+CREATE TABLE customers
+(
   id SERIAL PRIMARY KEY,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
@@ -53,7 +62,8 @@ CREATE TABLE customers (
   notes TEXT
 );
 
-CREATE TABLE orders (
+CREATE TABLE orders
+(
   id SERIAL PRIMARY KEY,
   restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE NOT NULL,
   pizza_id INTEGER REFERENCES pizzas(id) ON DELETE CASCADE NOT NULL,
