@@ -15,28 +15,10 @@ BEGIN;
     ('Demo', 'demo@demo.com', '$2y$12$WspO0e0AQLsW2mkN.ha/lep16QK15fjzhYJd.qFYjs3K9Utwnkm3a', '000-000-0000', '123 Pizza Way', 'Flavortown', 'CA', '90027'),
     ('Luigi''s Pizzeria', 'luigis@luigispizza.com', '$2y$12$04vyO/KPoAhA.3xr2RLhJO9.Eo/j2gmGg6teWkwx.iQ7rwit6UOIO', '555-555-5555', '123 Pizza Avenue', 'Flavortown', 'CA', '90004');
 
-  INSERT INTO pizza_sizes
-    (size, base_price)
-  VALUES
-    ('Small', 9),
-    ('Medium', 10),
-    ('Large', 11),
-    ('X-Large', 12);
-
-  INSERT INTO pizza_types
-    (type, addl_price)
-  VALUES
-    ('Cheese', 0),
-    ('Pepperoni', 2),
-    ('Supreme', 3),
-    ('Veggie', 1),
-    ('Hawaiian', 2),
-    ('BBQ Chicken', 2);
-
   INSERT INTO pizzas
-    (pizza_size, pizza_type)
+    (size, type)
   VALUES
-    (4, 3);
+    ('X-Large', 'Supreme');
 
   INSERT INTO customers
     (first_name, last_name, email, phone, street_address, city, state, zipcode, notes)

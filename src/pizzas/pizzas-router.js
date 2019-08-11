@@ -12,10 +12,10 @@ pizzasRouter
     );
   })
   .post(jsonBodyParser, (req, res, next) => {
-    const { pizza_size, pizza_type } = req.body;
+    const { size, type } = req.body;
     const newPizza = {
-      pizza_size,
-      pizza_type
+      size,
+      type
     };
     PizzasService.createPizza(req.app.get("db"), newPizza).then(newPizza =>
       res.status(201).json(newPizza)

@@ -1,28 +1,11 @@
 const PizzasService = {
   getAllPizzas(db) {
-    return db("pizzas")
-      .join("pizza_sizes", { "pizzas.pizza_size": "pizza_sizes.id" })
-      .join("pizza_types", { "pizzas.pizza_type": "pizza_types.id" })
-      .select(
-        "pizzas.id",
-        "pizza_sizes.size",
-        "pizza_types.type",
-        "pizza_sizes.base_price",
-        "pizza_types.addl_price"
-      );
+    return db("pizzas").select("*");
   },
   getPizzaById(db, id) {
     return db("pizzas")
       .where({ id })
-      .join("pizza_sizes", { "pizzas.pizza_size": "pizza_sizes.id" })
-      .join("pizza_types", { "pizzas.pizza_type": "pizza_types.id" })
-      .select(
-        "pizzas.id",
-        "pizza_sizes.size",
-        "pizza_types.type",
-        "pizza_sizes.base_price",
-        "pizza_types.addl_price"
-      );
+      .select("*");
   },
   createPizza(db, newPizza) {
     return db
