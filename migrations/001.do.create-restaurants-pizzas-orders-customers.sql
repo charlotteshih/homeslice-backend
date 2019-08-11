@@ -1,21 +1,3 @@
-CREATE TYPE size_options AS ENUM
-(
-  'Small',
-  'Medium',
-  'Large',
-  'X-Large'
-);
-
-CREATE TYPE pizza_types AS ENUM
-(
-  'Cheese',
-  'Pepperoni',
-  'Supreme',
-  'Veggie',
-  'Hawaiian',
-  'BBQ Chicken'
-);
-
 CREATE TYPE order_status AS ENUM
 (
   'Ordered',
@@ -25,6 +7,24 @@ CREATE TYPE order_status AS ENUM
   'Canceled: Out of stock',
   'Canceled: Customer request',
   'Canceled: Other'
+);
+
+CREATE TYPE pizza_size AS ENUM
+(
+  'Small',
+  'Medium',
+  'Large',
+  'X-Large'
+);
+
+CREATE TYPE pizza_type AS ENUM
+(
+  'Cheese',
+  'Pepperoni',
+  'Supreme',
+  'Veggie',
+  'Hawaiian',
+  'BBQ Chicken'
 );
 
 CREATE TABLE restaurants
@@ -43,9 +43,8 @@ CREATE TABLE restaurants
 CREATE TABLE pizzas
 (
   id SERIAL PRIMARY KEY,
-  size size_options NOT NULL,
-  type pizza_types NOT NULL,
-  price NUMERIC NOT NULL
+  size pizza_size NOT NULL,
+  type pizza_type NOT NULL
 );
 
 CREATE TABLE customers

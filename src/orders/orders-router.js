@@ -9,21 +9,68 @@ ordersRouter
   .get((req, res, next) => {
     OrdersService.getAllOrders(req.app.get("db"))
       .then(orders => {
-        res
-          .status(200)
-          .json(orders.map(order => OrdersService.serializeOrder(order)));
+        res.status(200).json(orders);
       })
       .catch(next);
   })
   .post(jsonBodyParser, (req, res, next) => {
+    console.log(req.body);
+
+    const pizzaSize = req.body.pizza_size;
+    const pizzaType = req.body.pizza_type;
+
+    let basePrice = 0;
+    let addlPrice = 0;
+
+    switch (pizzaSize) {
+      case "Small":
+        basePrice = 9;
+        break;
+      case "Medium":
+        basePrice = 10;
+        break;
+      case "Large":
+        basePrice = 11;
+        break;
+      case "X-Large":
+        basePrice = 12;
+        break;
+      default:
+        basePrice = 0;
+    }
+
+    switch (pizzaType) {
+      case "Cheese":
+        addlPrice = 0;
+        break;
+      case "Pepperoni":
+        addlPrice = 2;
+        break;
+      case "Supreme":
+        addlPrice = 3;
+        break;
+      case "Veggie":
+        addlPrice = 1;
+        break;
+      case "Hawaiian":
+        addlPrice = 2;
+        break;
+      case "BBQ Chicken":
+        addlPrice = 2;
+        break;
+      default:
+        addlPrice = 0;
+    }
+
     const {
       restaurant_id,
       pizza_id,
       customer_id,
       date_created,
-      order_status,
-      order_total
+      order_status
     } = req.body;
+
+    let order_total = basePrice + addlPrice;
 
     const newOrder = {
       restaurant_id,

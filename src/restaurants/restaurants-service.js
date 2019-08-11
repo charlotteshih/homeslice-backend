@@ -67,6 +67,7 @@ const RestaurantsService = {
       .select(
         "orders.id",
         "orders.date_created",
+        "orders.customer_id",
         "pizzas.size AS pizza_size",
         "pizzas.type AS pizza_type",
         "orders.order_status",
