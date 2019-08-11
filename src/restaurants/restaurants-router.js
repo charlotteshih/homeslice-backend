@@ -12,6 +12,7 @@ restaurantsRouter
   .get((req, res, next) => {
     RestaurantsService.getAllRestaurants(req.app.get("db"))
       .then(restaurants => {
+        console.log(restaurants);
         res
           .status(200)
           .json(RestaurantsService.serializeMultipleRestaurants(restaurants));
@@ -65,7 +66,7 @@ restaurantsRouter
               zipcode: zipcode.trim()
             };
 
-            return RestaurantsService.insertUser(
+            return RestaurantsService.insertRestaurant(
               req.app.get("db"),
               newRestaurant
             ).then(restaurant => {
@@ -105,7 +106,6 @@ restaurantsRouter
       .then(() => res.status(204).end())
       .catch(next);
   })
-
   .delete((req, res, next) => {
     RestaurantsService.removeRestaurant(
       req.app.get("db"),
