@@ -1,8 +1,24 @@
 const express = require('express');
 const AdminService = require('./admin-service');
-
 const adminRouter = express.Router();
 const jsonBodyParser = express.json();
+const RestaurantsService = require('../restaurants/restaurants-service');
+
+
+adminRouter
+  .route('/:restaurant_id')
+  .delete((req, res, next) => {
+    let token = req.headers.authorization.split(' ')[1];
+    let payload = AdminService.verifyJwt(token);
+    if(payload) {
+      RestaurantsService.removeRestaurant(
+        req.app.get("db"),
+        req.params.restaurant_id
+      )
+      .then(() => res.status(204).end())
+      .catch(next);
+    }
+  })
 
 adminRouter
   .post('/login', jsonBodyParser, (req, res, next) => {
