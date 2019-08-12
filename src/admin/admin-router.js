@@ -4,9 +4,8 @@ const adminRouter = express.Router();
 const jsonBodyParser = express.json();
 const RestaurantsService = require('../restaurants/restaurants-service');
 
-
 adminRouter
-  .route('restaurant/:restaurant_id')
+  .route('/restaurant/:restaurant_id')
   .delete((req, res, next) => {
     let token = req.headers.authorization.split(' ')[1];
     let payload = AdminService.verifyJwt(token);
