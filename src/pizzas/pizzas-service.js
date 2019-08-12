@@ -6,7 +6,8 @@ const PizzasService = {
     return db
       .from("pizzas")
       .select("*")
-      .where({ id });
+      .where({ id })
+      .then(pizzaArr => pizzaArr[0]);
   },
   createPizza(db, newPizza) {
     return db

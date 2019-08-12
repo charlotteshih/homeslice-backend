@@ -1,5 +1,6 @@
 const express = require("express");
 const OrdersService = require("./orders-service");
+const PizzasService = require("../pizzas/pizzas-service");
 
 const ordersRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -22,30 +23,77 @@ ordersRouter
       customer_id,
       date_created,
       order_status,
-      order_total
     } = req.body;
 
-    const newOrder = {
-      restaurant_id,
-      pizza_id,
-      customer_id,
-      date_created,
-      order_status,
-      order_total
-    };
-    // checks that all keys are included in request body (except date_created, which should only be included if you want the date to be something other than now)
-    for (const [key, value] of Object.entries(newOrder)) {
-      if (value == null && value !== date_created) {
-        return res.status(400).json({
-          error: `Missing '${key}' in request body`
-        });
-      }
-    }
+    PizzasService.getPizzaById(req.app.get('db'), pizza_id)
+      .then(res => {
+        let pizzaSize = res.size;
+        let pizzaType = res.type;
 
-    OrdersService.insertOrder(req.app.get("db"), newOrder)
-      .then(order => {
-        res.status(201).json({ ...order });
+        let basePrice = 0;
+        let addlPrice = 0;
+
+        switch (pizzaSize) {
+          case "Small":
+            basePrice = 9;
+            break;
+          case "Medium":
+            basePrice = 10;
+            break;
+          case "Large":
+            basePrice = 11;
+            break;
+          case "X-Large":
+            basePrice = 12;
+            break;
+          default:
+            basePrice = 0;
+        }
+
+        switch (pizzaType) {
+          case "Cheese":
+            addlPrice = 0;
+            break;
+          case "Pepperoni":
+            addlPrice = 2;
+            break;
+          case "Supreme":
+            addlPrice = 3;
+            break;
+          case "Veggie":
+            addlPrice = 1;
+            break;
+          case "Hawaiian":
+            addlPrice = 2;
+            break;
+          case "BBQ Chicken":
+            addlPrice = 2;
+            break;
+          default:
+            addlPrice = 0;
+        }
+
+        let order_total = basePrice + addlPrice;
+
+        const newOrder = {
+          restaurant_id,
+          pizza_id,
+          customer_id,
+          date_created,
+          order_status,
+          order_total
+        };
+
+        for (const [key, value] of Object.entries(newOrder)) {
+          if (value == null && value !== date_created) {
+            return res.status(400).json({
+              error: `Missing '${key}' in request body`
+            });
+          }
+        }
+        return OrdersService.insertOrder(req.app.get("db"), newOrder)
       })
+      .then(order => res.status(201).json({ ...order }))
       .catch(next);
   });
 

@@ -14,11 +14,11 @@ pizzasRouter
   .post(jsonBodyParser, (req, res, next) => {
     const { size, type } = req.body;
     //TODO add logic to calculate pizza price depending on size and type.
-    const price = 5;
+    // const price = 5;
     const newPizza = {
       size,
       type,
-      price
+      // price
     };
     PizzasService.createPizza(req.app.get("db"), newPizza).then(newPizza =>
       res.status(201).json(newPizza)
