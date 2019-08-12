@@ -1,4 +1,4 @@
-CREATE TYPE size_options AS ENUM
+CREATE TYPE pizza_size AS ENUM
 (
   'Small',
   'Medium',
@@ -6,7 +6,7 @@ CREATE TYPE size_options AS ENUM
   'X-Large'
 );
 
-CREATE TYPE pizza_types AS ENUM
+CREATE TYPE pizza_type AS ENUM
 (
   'Cheese',
   'Pepperoni',
@@ -43,9 +43,8 @@ CREATE TABLE restaurants
 CREATE TABLE pizzas
 (
   id SERIAL PRIMARY KEY,
-  size size_options NOT NULL,
-  type pizza_types NOT NULL,
-  price NUMERIC NOT NULL
+  size pizza_size NOT NULL,
+  type pizza_type NOT NULL
 );
 
 CREATE TABLE customers

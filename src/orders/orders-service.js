@@ -2,7 +2,9 @@ const xss = require("xss");
 
 const OrdersService = {
   getAllOrders(db) {
-    return db.from("orders").select("*");
+    return db
+      .from("orders")
+      .select("*");
   },
 
   getOrderById(db, id) {
