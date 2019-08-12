@@ -1,11 +1,12 @@
 const PizzasService = {
   getAllPizzas(db) {
-    return db("pizzas").select("*");
+    return db.from("pizzas").select("*");
   },
   getPizzaById(db, id) {
-    return db("pizzas")
-      .where({ id })
-      .select("*");
+    return db
+      .from("pizzas")
+      .select("*")
+      .where({ id });
   },
   createPizza(db, newPizza) {
     return db
