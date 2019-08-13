@@ -10,6 +10,7 @@ const restaurantsRouter = require('./restaurants/restaurants-router');
 const pizzasRouter = require('./pizzas/pizzas-router');
 const customersRouter = require('./customers/customers-router');
 const ordersRouter = require("./orders/orders-router");
+const stripeRouter = require("./stripe/stripe-router");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/restaurants', restaurantsRouter);
 app.use('/api/pizzas', pizzasRouter);
 app.use('/api/customers', customersRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/stripe", stripeRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
