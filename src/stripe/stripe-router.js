@@ -1,23 +1,21 @@
-const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const express = require("express");
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const stripeRouter = express.Router();
 
-stripeRouter
-  .post("/", async (req, res) => {
-    try {
-      let { status } = await stripe.charges.create({
-        amount: 0001,
-        currency: "usd",
-        description: "An example charge",
-        source: req.body
-      });
-  
-      res.status(204).json({ status });
-      console.log(res);
-    } catch (err) {
-      res.status(500).end();
-    }
-  });
+stripeRouter.post("/", (req, res) => {
+  console.log("req.body", req.body);
+  let charge = stripe.charges
+    .create({
+      amount: 0001,
+      currency: "usd",
+      description: "An example charge",
+      source: req.body
+    })
+    .then(charge => {
+      res.status(204).json({ charge });
+    })
+    .catch(err => res.status(500).json(err));
+});
 
 module.exports = stripeRouter;
