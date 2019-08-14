@@ -3,7 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const stripeRouter = express.Router();
 
-stripeRouter.post("/", (req, res) => {
+stripeRouter.post("/charge", (req, res) => {
   console.log("req.body", req.body);
   let charge = stripe.charges
     .create({
