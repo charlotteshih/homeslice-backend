@@ -2,15 +2,15 @@ const express = require("express");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const stripeRouter = express.Router();
+const jsonBodyParser = express.json();
 
-stripeRouter.post("/charge", (req, res) => {
-  console.log("req.body", req.body);
+stripeRouter.route("/charge").post(jsonBodyParser, (req, res) => {
   let charge = stripe.charges
     .create({
-      amount: 0001,
+      amount: 1000,
       currency: "usd",
       description: "An example charge",
-      source: req.body
+      source: req.body.id
     })
     .then(charge => {
       res.status(204).json({ charge });
