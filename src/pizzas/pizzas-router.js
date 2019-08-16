@@ -26,8 +26,8 @@ pizzasRouter
   });
 
 pizzasRouter
-  .all(_getPizzaById)
   .route("/:pizza_id")
+  .all(_getPizzaById)
   .get((req, res) => res.status(200).json(res.pizza))
   .patch(jsonBodyParser, (req, res, next) => {
     let dataToUpdate = req.body;
