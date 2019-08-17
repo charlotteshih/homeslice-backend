@@ -105,7 +105,8 @@ function makeCustomersArray() {
       street_address: "Peach's Castle",
       city: "Mushroom Land",
       state: "MA",
-      zipcode: "02467"
+      zipcode: "02467",
+      notes: ""
     },
     {
       id: 2,
@@ -116,7 +117,8 @@ function makeCustomersArray() {
       street_address: "Peach's Castle",
       city: "Mushroom Land",
       state: "MA",
-      zipcode: "02467"
+      zipcode: "02467",
+      notes: ""
     }
   ];
 }
@@ -125,45 +127,45 @@ function makeOrdersArray(restaurants, pizzas, customers) {
   return [
     {
       id: 1,
-      restaurant_id: restaurants[1].id,
-      pizza_id: pizzas[0].id,
-      customer_id: customers[1].id,
+      restaurant_id: 2,
+      pizza_id: 1,
+      customer_id: 2,
       date_created: "2029-01-22T16:28:32.615Z",
       order_status: "Ordered",
       order_total: 10.59
     },
     {
       id: 2,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[1].id,
-      customer_id: customers[0].id,
+      restaurant_id: 3,
+      pizza_id: 2,
+      customer_id: 1,
       date_created: "2029-01-22T16:28:32.615Z",
       order_status: "Done",
       order_total: 7.0
     },
     {
       id: 3,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[2].id,
-      customer_id: customers[0].id,
+      restaurant_id: 1,
+      pizza_id: 3,
+      customer_id: 1,
       date_created: "2029-01-22T16:28:32.615Z",
       order_status: "In Progress",
       order_total: 11.99
     },
     {
       id: 4,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[3].id,
-      customer_id: customers[1].id,
+      restaurant_id: 3,
+      pizza_id: 4,
+      customer_id: 2,
       date_created: "2029-01-22T16:28:32.615Z",
       order_status: "Done",
       order_total: 9.69
     },
     {
       id: 5,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[4].id,
-      customer_id: customers[0].id,
+      restaurant_id: 1,
+      pizza_id: 5,
+      customer_id: 1,
       date_created: "2029-01-22T16:28:32.615Z",
       order_status: "Ready for Pickup",
       order_total: 12.25
