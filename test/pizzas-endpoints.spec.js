@@ -66,22 +66,35 @@ describe("Pizzas Endpoints", function() {
           .expect(201, { id: 1, ...pizzaInfo });
       });
     });
+  });
+
+  describe(`PATCH /api/pizzas/:pizza_id`, () => {
     context(`Given there are pizzas in the database`, () => {
       beforeEach("insert pizzas", () => {
         helpers.seedPizzas(db, seedPizzas);
       });
 
-      it(`responds with 201 and pizza object`, () => {
+      it("responds with 204", () => {
         const pizzaInfo = { size: "Small", type: "Cheese" };
         return supertest(app)
-          .post(`/api/pizzas/`)
+          .patch("/api/pizzas/1")
           .send(pizzaInfo)
-          .expect(201, { id: 6, ...pizzaInfo });
+          .expect(204);
       });
     });
   });
 
-  //   describe(`PATCH /api/pizzas/:pizza_id`, () => {
-  //     context(`Given no pizzas`);
-  //   });
+  describe(`DELETE /api/pizzas/:pizza_id`, () => {
+    context(`Given there are pizzas in the database`, () => {
+      beforeEach("insert pizzas", () => {
+        helpers.seedPizzas(db, seedPizzas);
+      });
+
+      it("responds with 204", () => {
+        return supertest(app)
+          .delete("/api/pizzas/1")
+          .expect(204);
+      });
+    });
+  });
 });

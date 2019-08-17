@@ -5,9 +5,9 @@ const helpers = require("./test-helpers");
 describe("Orders Endpoints", function() {
   let db;
 
-  const testFixtures = helpers.makeFixtures();
-  const testOrders = testFixtures.testOrders;
-  console.log("testOrders", testOrders);
+  const { testOrders } = helpers.makeFixtures();
+  const seedOrders = helpers.makeOrdersArray();
+  console.log("seedOrders", seedOrders);
 
   before("make knex instance", () => {
     db = knex({
@@ -21,27 +21,27 @@ describe("Orders Endpoints", function() {
 
   before("cleanup", () => helpers.cleanTables(db));
 
-  //   afterEach("cleanup", () => helpers.cleanTables(db));
+  afterEach("cleanup", () => helpers.cleanTables(db));
 
   describe(`GET /api/orders`, () => {
-    // context(`Given no orders`, () => {
-    //   it(`responds with 200 and an empty list`, () => {
-    //     return supertest(app)
-    //       .get("/api/orders")
-    //       .expect(200, []);
-    //   });
-    // });
-
-    context(`Given there are orders in the database`, () => {
-      beforeEach("insert articles", () => {
-        helpers.seedOrders(db, testOrders);
-      });
-
-      it("responds with 200 and all of the orders", () => {
+    context(`Given no orders`, () => {
+      it(`responds with 200 and an empty list`, () => {
         return supertest(app)
-          .get("api/orders")
-          .expect(200, testOrders);
+          .get("/api/orders")
+          .expect(200, []);
       });
     });
+
+    // context(`Given there are orders in the database`, () => {
+    //   beforeEach("insert articles", () => {
+    //     helpers.seedOrders(db, seedOrders);
+    //   });
+
+    //   it("responds with 200 and all of the orders", () => {
+    //     return supertest(app)
+    //       .get("api/orders")
+    //       .expect(200, seedOrders);
+    //   });
+    // });
   });
 });
