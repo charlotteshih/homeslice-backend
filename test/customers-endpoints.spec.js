@@ -18,7 +18,7 @@ describe(`Customers Endpoints`, function () {
 
   after(`Disconnect from db`, () => db.destroy());
   before(`Cleanup`, () => helpers.cleanTables(db));
-  afterEach(`Cleanup`, () => helpers.cleanTables);
+  afterEach(`Cleanup`, () => helpers.cleanTables(db));
 
   describe(`GET /api/customers`, () => {
     context(`Given there are customers in the database`, () => {
@@ -39,8 +39,8 @@ describe(`Customers Endpoints`, function () {
       it(`Responds with 404`, () => {
         const customerId = 12345;
         return supertest(app)
-          .get(`/api/customers${customerId}`)
-          .expect(404, {});
+          .get(`/api/customers/${customerId}`)
+          .expect(404, { "error": "Customer doesn't exist." });
       });
     });
 
@@ -118,7 +118,7 @@ describe(`Customers Endpoints`, function () {
         return supertest(app)
           .delete(`/api/customers/1`)
           .expect(204);
-      })
-    })
-  })
+      });
+    });
+  });
 });

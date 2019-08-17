@@ -290,7 +290,7 @@ function cleanTables(db) {
 function seedRestaurants(db, restaurants) {
   const preppedRestaurants = restaurants.map(restaurant => ({
     ...restaurant,
-    password: bcrypt.hashSync(restaurant.password, 1)
+    password: bcrypt.hashSync(restaurant.password, 12)
   }));
   return db
     .into("restaurants")
