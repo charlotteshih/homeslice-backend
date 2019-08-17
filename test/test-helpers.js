@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 function makeRestaurantsArray() {
   return [
     {
-      id: 1,
       name: "Mario's Pizza",
       email: "mario@mariospizza.com",
       password: "ItsAMe123!",
@@ -15,7 +14,6 @@ function makeRestaurantsArray() {
       zipcode: "02467"
     },
     {
-      id: 2,
       name: "Luigi's Pizza",
       email: "luigi@luigispizza.com",
       password: "ItsAMe456!",
@@ -26,9 +24,28 @@ function makeRestaurantsArray() {
       zipcode: "02467"
     },
     {
-      id: 3,
       name: "Bowser's Pizzeria",
-      email: "bowser@bowserspizzeria.com",
+      email: "bowser2@bowserspizzeria.com",
+      password: "Rawr789!",
+      phone: "555-555-5555",
+      street_address: "BOWSER'S CASTLE",
+      city: "Koopa Keep",
+      state: "CT",
+      zipcode: "03551"
+    },
+    {
+      name: "Bowser's Pizzeria",
+      email: "bowser3@bowserspizzeria.com",
+      password: "Rawr789!",
+      phone: "555-555-5555",
+      street_address: "BOWSER'S CASTLE",
+      city: "Koopa Keep",
+      state: "CT",
+      zipcode: "03551"
+    },
+    {
+      name: "Bowser's Pizzeria",
+      email: "bowser4@bowserspizzeria.com",
       password: "Rawr789!",
       phone: "555-555-5555",
       street_address: "BOWSER'S CASTLE",
@@ -39,55 +56,25 @@ function makeRestaurantsArray() {
   ];
 }
 
-function pizzasArrayForSeeding() {
-  [
-    {
-      size: "Small",
-      type: "Cheese"
-    },
-    {
-      size: "X-Large",
-      type: "Supreme"
-    },
-    {
-      size: "Medium",
-      type: "BBQ Chicken"
-    },
-    {
-      size: "Large",
-      type: "Hawaiian"
-    },
-    {
-      size: "Large",
-      type: "Pepperoni"
-    }
-  ];
-}
-
 function makePizzasArray() {
   return [
     {
-      id: 1,
       size: "Small",
       type: "Cheese"
     },
     {
-      id: 2,
       size: "X-Large",
       type: "Supreme"
     },
     {
-      id: 3,
       size: "Medium",
       type: "BBQ Chicken"
     },
     {
-      id: 4,
       size: "Large",
       type: "Hawaiian"
     },
     {
-      id: 5,
       size: "Large",
       type: "Pepperoni"
     }
@@ -97,7 +84,6 @@ function makePizzasArray() {
 function makeCustomersArray() {
   return [
     {
-      id: 1,
       first_name: "Peach",
       last_name: "Princess",
       email: "peach@princess.com",
@@ -108,10 +94,39 @@ function makeCustomersArray() {
       zipcode: "02467"
     },
     {
-      id: 2,
       first_name: "Daisy",
       last_name: "Princess",
       email: "daisy@princess.com",
+      phone: "222-222-2222",
+      street_address: "Peach's Castle",
+      city: "Mushroom Land",
+      state: "MA",
+      zipcode: "02467"
+    },
+    {
+      first_name: "Daisy",
+      last_name: "Princess",
+      email: "daisy2@princess.com",
+      phone: "222-222-2222",
+      street_address: "Peach's Castle",
+      city: "Mushroom Land",
+      state: "MA",
+      zipcode: "02467"
+    },
+    {
+      first_name: "Daisy",
+      last_name: "Princess",
+      email: "daisy3@princess.com",
+      phone: "222-222-2222",
+      street_address: "Peach's Castle",
+      city: "Mushroom Land",
+      state: "MA",
+      zipcode: "02467"
+    },
+    {
+      first_name: "Daisy",
+      last_name: "Princess",
+      email: "daisy4@princess.com",
       phone: "222-222-2222",
       street_address: "Peach's Castle",
       city: "Mushroom Land",
@@ -124,49 +139,36 @@ function makeCustomersArray() {
 function makeOrdersArray(restaurants, pizzas, customers) {
   return [
     {
-      id: 1,
-      restaurant_id: restaurants[1].id,
-      pizza_id: pizzas[0].id,
-      customer_id: customers[1].id,
-      date_created: "2029-01-22T16:28:32.615Z",
+      restaurant_id: 1,
+      pizza_id: 1,
+      customer_id: 1,
+      date_created: "2029-01-23T04:28:32.615Z",
       order_status: "Ordered",
-      order_total: 10.59
+      order_total: "10.59"
     },
     {
-      id: 2,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[1].id,
-      customer_id: customers[0].id,
-      date_created: "2029-01-22T16:28:32.615Z",
-      order_status: "Done",
-      order_total: 7.0
+      restaurant_id: 2,
+      pizza_id: 2,
+      customer_id: 2,
+      date_created: "2029-01-23T04:28:32.615Z",
+      order_status: "Completed",
+      order_total: "7.00"
     },
     {
-      id: 3,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[2].id,
-      customer_id: customers[0].id,
-      date_created: "2029-01-22T16:28:32.615Z",
+      restaurant_id: 3,
+      pizza_id: 3,
+      customer_id: 3,
+      date_created: "2029-01-23T04:28:32.615Z",
       order_status: "In Progress",
-      order_total: 11.99
+      order_total: "11.99"
     },
     {
-      id: 4,
-      restaurant_id: restaurants[2].id,
-      pizza_id: pizzas[3].id,
-      customer_id: customers[1].id,
-      date_created: "2029-01-22T16:28:32.615Z",
-      order_status: "Done",
-      order_total: 9.69
-    },
-    {
-      id: 5,
-      restaurant_id: restaurants[0].id,
-      pizza_id: pizzas[4].id,
-      customer_id: customers[0].id,
-      date_created: "2029-01-22T16:28:32.615Z",
-      order_status: "Ready for Pickup",
-      order_total: 12.25
+      restaurant_id: 4,
+      pizza_id: 4,
+      customer_id: 4,
+      date_created: "2029-01-23T04:28:32.615Z",
+      order_status: "Completed",
+      order_total: "9.69"
     }
   ];
 }
@@ -249,6 +251,14 @@ function makeMaliciousCustomer(customer) {
     maliciousCustomer,
     expectedCustomer
   };
+}
+
+function addId(array) {
+  let newArray = [];
+  for (let i = 0; i < array.length; i++) {
+    newArray.push({ id: i + 1, ...array[i] });
+  }
+  return newArray;
 }
 
 function makeFixtures() {
@@ -362,7 +372,7 @@ module.exports = {
   // makeExpectedCustomer,
   makeMaliciousRestaurant,
   makeMaliciousCustomer,
-
+  addId,
   makeFixtures,
   cleanTables,
   seedMaliciousRestaurant,
