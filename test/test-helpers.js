@@ -7,7 +7,7 @@ function makeRestaurantsArray() {
       id: 1,
       name: "Mario's Pizza",
       email: "mario@mariospizza.com",
-      password: "ItsAMe123!",
+      password: bcrypt.hashSync("ItsAMe123!", 12),
       phone: "333-333-3333",
       street_address: "123 Mushroom Street",
       city: "Mushroom Land",
@@ -18,7 +18,7 @@ function makeRestaurantsArray() {
       id: 2,
       name: "Luigi's Pizza",
       email: "luigi@luigispizza.com",
-      password: "ItsAMe456!",
+      password: bcrypt.hashSync("ItsAMe456!", 12),
       phone: "444-444-4444",
       street_address: "456 Mansion Way",
       city: "Mushroom Land",
@@ -29,7 +29,7 @@ function makeRestaurantsArray() {
       id: 3,
       name: "Bowser's Pizzeria",
       email: "bowser@bowserspizzeria.com",
-      password: "Rawr789!",
+      password: bcrypt.hashSync("Rawr789!", 12),
       phone: "555-555-5555",
       street_address: "BOWSER'S CASTLE",
       city: "Koopa Keep",
@@ -204,54 +204,54 @@ function makeExpectedCustomer(customers, customer) {
   };
 }
 
-function makeMaliciousRestaurant(restaurant) {
-  const maliciousRestaurant = {
-    id: 911,
-    name: "Uh-oh",
-    email: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    password: "Password123!",
-    phone: "000-000-0000",
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-    city: "City Name",
-    state: "State",
-    zipcode: "00000"
-  };
-  const expectedRestaurant = {
-    ...makeExpectedRestaurant([restaurant], maliciousRestaurant),
-    email:
-      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
-  };
-  return {
-    maliciousRestaurant,
-    expectedRestaurant
-  };
-}
+// function makeMaliciousRestaurant(restaurant) {
+//   const maliciousRestaurant = {
+//     id: 911,
+//     name: "Uh-oh",
+//     email: 'Naughty naughty very naughty <script>alert("xss");</script>',
+//     password: "Password123!",
+//     phone: "000-000-0000",
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+//     city: "City Name",
+//     state: "State",
+//     zipcode: "00000"
+//   };
+//   const expectedRestaurant = {
+//     ...makeExpectedRestaurant([restaurant], maliciousRestaurant),
+//     email:
+//       'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+//   };
+//   return {
+//     maliciousRestaurant,
+//     expectedRestaurant
+//   };
+// }
 
-function makeMaliciousCustomer(customer) {
-  const maliciousCustomer = {
-    id: 911,
-    first_name: "Uh-oh",
-    last_name: "Spaghetti-Os",
-    email: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    phone: "000-000-0000",
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-    city: "City Name",
-    state: "State",
-    zipcode: "00000"
-  };
+// function makeMaliciousCustomer(customer) {
+//   const maliciousCustomer = {
+//     id: 911,
+//     first_name: "Uh-oh",
+//     last_name: "Spaghetti-Os",
+//     email: 'Naughty naughty very naughty <script>alert("xss");</script>',
+//     phone: "000-000-0000",
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+//     city: "City Name",
+//     state: "State",
+//     zipcode: "00000"
+//   };
 
-  const expectedCustomer = {
-    ...makeExpectedCustomer([customer], maliciousCustomer),
-    email:
-      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
-  };
-  return {
-    maliciousCustomer,
-    expectedCustomer
-  };
-}
+//   const expectedCustomer = {
+//     ...makeExpectedCustomer([customer], maliciousCustomer),
+//     email:
+//       'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+//   };
+//   return {
+//     maliciousCustomer,
+//     expectedCustomer
+//   };
+// }
 
 function makeFixtures() {
   const testRestaurants = makeRestaurantsArray();
@@ -335,17 +335,17 @@ function seedOrders(db, orders) {
     });
 }
 
-function seedMaliciousRestaurant(db, restaurant, maliciousRestaurant) {
-  return seedRestaurants(db, [restaurant]).then(() => {
-    db.insert([maliciousRestaurant]).into("restaurants");
-  });
-}
+// function seedMaliciousRestaurant(db, restaurant, maliciousRestaurant) {
+//   return seedRestaurants(db, [restaurant]).then(() => {
+//     db.insert([maliciousRestaurant]).into("restaurants");
+//   });
+// }
 
-function seedMaliciousCustomer(db, customer, maliciousCustomer) {
-  return seedCustomers(db, [customer]).then(() => {
-    db.insert([maliciousCustomer]).into("customers");
-  });
-}
+// function seedMaliciousCustomer(db, customer, maliciousCustomer) {
+//   return seedCustomers(db, [customer]).then(() => {
+//     db.insert([maliciousCustomer]).into("customers");
+//   });
+// }
 
 function makeAuthHeader(restaurant, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ email: restaurant.email }, secret, {
@@ -362,13 +362,13 @@ module.exports = {
   makeOrdersArray,
   // makeExpectedRestaurant,
   // makeExpectedCustomer,
-  makeMaliciousRestaurant,
-  makeMaliciousCustomer,
+  // makeMaliciousRestaurant,
+  // makeMaliciousCustomer,
 
   makeFixtures,
   cleanTables,
-  seedMaliciousRestaurant,
-  seedMaliciousCustomer,
+  // seedMaliciousRestaurant,
+  // seedMaliciousCustomer,
   makeAuthHeader,
   seedRestaurants,
   seedPizzas,

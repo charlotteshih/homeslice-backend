@@ -2,12 +2,12 @@ const knex = require("knex");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe("Orders Endpoints", function() {
+describe("Orders Endpoints", function () {
   let db;
 
   const { testOrders } = helpers.makeFixtures();
   const seedOrders = helpers.makeOrdersArray();
-  console.log("seedOrders", seedOrders);
+  // console.log("seedOrders", seedOrders);
 
   before("make knex instance", () => {
     db = knex({

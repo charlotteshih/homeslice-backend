@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe.only(`Restaurants Endpoints`, () => {
+describe(`Restaurants Endpoints`, () => {
   let db;
 
   const { testRestaurants } = helpers.makeFixtures();
@@ -21,7 +21,8 @@ describe.only(`Restaurants Endpoints`, () => {
   before(`Cleanup`, () => helpers.cleanTables(db));
   afterEach(`Cleanup`, () => helpers.cleanTables(db));
 
-  describe(`GET /api/restaurants`, () => {
+  //doesn't pass because bcrypted passwords don't match
+  describe.only(`GET /api/restaurants`, () => {
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
         helpers.seedRestaurants(db, seedRestaurants);
@@ -36,6 +37,7 @@ describe.only(`Restaurants Endpoints`, () => {
   });
 
   describe(`GET /api/restaurants/:restaurant_id`, () => {
+    //passes
     context(`Given no restaurants`, () => {
       it(`Responds with 404`, () => {
         const restaurantId = 12345;
@@ -45,27 +47,30 @@ describe.only(`Restaurants Endpoints`, () => {
       });
     });
 
+    // doesn't pass because bcrypted passwords don't match
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
         helpers.seedRestaurants(db, seedRestaurants);
       });
 
       it(`Responds with 200 and the specified restaurant`, () => {
+        console.log('seedRestaurants', seedRestaurants);
         return supertest(app)
           .get(`/api/restaurants/1`)
-          .expect(200, testRestaurants[0]);
+          .expect(200, seedRestaurants[0]);
       });
     });
   });
 
-  describe.only(`POST /api/restaurants`, () => {
+  // Doesn't pass because bcrypted passwords don't match
+  describe(`POST /api/restaurants`, () => {
     context(`Given no restaurants`, () => {
       it(`Responds with 201 and a restaurant object`, () => {
         const restaurantInfo = {
-          id: 12345,
+          id: 1,
           name: "Test Restaurant",
           email: "test@homeslice.com",
-          password: bcrypt.hash("ThisIs1Test!", 12),
+          password: bcrypt.hashSync("ThisIs1Test!", 12),
           phone: "000-000-0000",
           street_address: "123 Test Restaurant Street",
           city: "Testville",
@@ -93,7 +98,7 @@ describe.only(`Restaurants Endpoints`, () => {
           id: 1,
           name: "Test Restaurant",
           email: "test@homeslice.com",
-          password: bcrypt.hash("ThisIs1Test!", 12),
+          password: bcrypt.hashSync("ThisIs1Test!", 12),
           phone: "000-000-0000",
           street_address: "123 Test Restaurant Street",
           city: "Testville",
@@ -109,6 +114,7 @@ describe.only(`Restaurants Endpoints`, () => {
     });
   });
 
+  // passes
   describe(`DELETE /api/restaurants/:restaurant_id`, () => {
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {

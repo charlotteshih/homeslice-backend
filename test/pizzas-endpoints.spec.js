@@ -7,7 +7,7 @@ describe("Pizzas Endpoints", function () {
 
   const { testPizzas } = helpers.makeFixtures();
   const seedPizzas = helpers.makePizzasArray();
-  console.log("testPizzas", testPizzas);
+  // console.log("testPizzas", testPizzas);
 
   before("make knex instance", () => {
     db = knex({
