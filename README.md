@@ -1,6 +1,7 @@
 # HomeSlice API
 
-This is a boilerplate project used for starting new projects!
+API for HomeSlice
+[HomeSlice Front-End Repository](https://github.com/charlotteshih/homeslice-frontend)
 
 ## Set up
 
@@ -67,7 +68,6 @@ Run the tests `npm test`
 │       └── /
 │   └── PATCH
 │       └── /:pizza_id
-d
 │   └── DELETE
 │       └── /:pizza_id
 |
