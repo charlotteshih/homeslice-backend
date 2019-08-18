@@ -6,8 +6,7 @@ describe("Pizzas Endpoints", function () {
   let db;
 
   const { testPizzas } = helpers.makeFixtures();
-  const seedPizzas = helpers.makePizzasArray();
-  // console.log("testPizzas", testPizzas);
+  console.log("testPizzas", testPizzas);
 
   before("make knex instance", () => {
     db = knex({
@@ -34,13 +33,13 @@ describe("Pizzas Endpoints", function () {
 
     context(`Given there are pizzas in the database`, () => {
       beforeEach("insert pizzas", () => {
-        helpers.seedPizzas(db, seedPizzas);
+        helpers.seedPizzas(db, testPizzas);
       });
 
       it("responds with 200 and all of the pizzas", () => {
         return supertest(app)
           .get("/api/pizzas")
-          .expect(200, testPizzas);
+          .expect(200, helpers.addId(testPizzas));
       });
     });
   });
@@ -52,6 +51,18 @@ describe("Pizzas Endpoints", function () {
         return supertest(app)
           .get(`/api/pizzas/${pizzaId}`)
           .expect(404, { error: `Pizza doesn't exist.` });
+      });
+    });
+    context(`Given there are pizzas in the database`, () => {
+      beforeEach("insert pizzas", () => {
+        helpers.seedPizzas(db, testPizzas);
+      });
+
+      it("responds with 200 and the selected order", () => {
+        const pizzaId = 1;
+        return supertest(app)
+          .get(`/api/pizzas/${pizzaId}`)
+          .expect(200);
       });
     });
   });
@@ -71,7 +82,7 @@ describe("Pizzas Endpoints", function () {
   describe(`PATCH /api/pizzas/:pizza_id`, () => {
     context(`Given there are pizzas in the database`, () => {
       beforeEach("insert pizzas", () => {
-        helpers.seedPizzas(db, seedPizzas);
+        helpers.seedPizzas(db, testPizzas);
       });
 
       it("responds with 204", () => {
@@ -87,12 +98,12 @@ describe("Pizzas Endpoints", function () {
   describe(`DELETE /api/pizzas/:pizza_id`, () => {
     context(`Given there are pizzas in the database`, () => {
       beforeEach("insert pizzas", () => {
-        helpers.seedPizzas(db, seedPizzas);
+        helpers.seedPizzas(db, testPizzas);
       });
 
       it("responds with 204", () => {
         return supertest(app)
-          .delete("/api/pizzas/1")
+          .del("/api/pizzas/1")
           .expect(204);
       });
     });
