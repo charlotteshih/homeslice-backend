@@ -59,7 +59,7 @@ customersRouter
     CustomersService.updateCustomer(
       req.app.get("db"),
       req.params.customer_id,
-      customerToUpdate
+      newFields
     )
       .then(() => res.status(204).end())
       .catch(next);
