@@ -81,7 +81,8 @@ function makeCustomersArray() {
       street_address: "Peach's Castle",
       city: "Mushroom Land",
       state: "MA",
-      zipcode: "02467"
+      zipcode: "02467",
+      notes: ""
     },
     {
       first_name: "Daisy",
@@ -91,37 +92,8 @@ function makeCustomersArray() {
       street_address: "Peach's Castle",
       city: "Mushroom Land",
       state: "MA",
-      zipcode: "02467"
-    },
-    {
-      first_name: "Daisy",
-      last_name: "Princess",
-      email: "daisy2@princess.com",
-      phone: "222-222-2222",
-      street_address: "Peach's Castle",
-      city: "Mushroom Land",
-      state: "MA",
-      zipcode: "02467"
-    },
-    {
-      first_name: "Daisy",
-      last_name: "Princess",
-      email: "daisy3@princess.com",
-      phone: "222-222-2222",
-      street_address: "Peach's Castle",
-      city: "Mushroom Land",
-      state: "MA",
-      zipcode: "02467"
-    },
-    {
-      first_name: "Daisy",
-      last_name: "Princess",
-      email: "daisy4@princess.com",
-      phone: "222-222-2222",
-      street_address: "Peach's Castle",
-      city: "Mushroom Land",
-      state: "MA",
-      zipcode: "02467"
+      zipcode: "02467",
+      notes: ""
     }
   ];
 }
@@ -159,6 +131,15 @@ function makeOrdersArray() {
       date_created: "2029-01-23T04:28:32.615Z",
       order_status: "Completed",
       order_total: "9.69"
+    },
+    {
+      id: 5,
+      restaurant_id: 1,
+      pizza_id: 5,
+      customer_id: 1,
+      date_created: "2029-01-22T16:28:32.615Z",
+      order_status: "Ready for Pickup",
+      order_total: 12.25
     }
   ];
 }

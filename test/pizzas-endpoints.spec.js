@@ -2,7 +2,7 @@ const knex = require("knex");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe("Pizzas Endpoints", function() {
+describe("Pizzas Endpoints", function () {
   let db;
 
   const { testPizzas } = helpers.makeFixtures();
