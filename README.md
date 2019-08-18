@@ -4,6 +4,13 @@ API for HomeSlice
 
 [HomeSlice Front-End Repository](https://github.com/charlotteshih/homeslice-frontend)
 
+## Tech Stack
+
+- [Node](https://github.com/nodejs/node)
+- [Express](https://github.com/expressjs/express)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Knex.js](https://knexjs.org/)
+
 ## API Tree
 
 ```
