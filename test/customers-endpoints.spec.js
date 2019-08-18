@@ -89,19 +89,12 @@ describe(`Customers Endpoints`, function () {
 
       it(`Responds with 204`, () => {
         const customerInfo = {
-          id: 1,
           first_name: "Test",
           last_name: "Customer",
-          email: "test@customer.com",
-          phone: "000-000-0000",
-          street_address: "123 Test Address Street",
-          city: "Test City",
-          state: "TEST",
-          zipcode: "99999"
         };
 
         return supertest(app)
-          .patch(`/api/customers/1`)
+          .patch(`/api/customers/2`)
           .send(customerInfo)
           .expect(204);
       });

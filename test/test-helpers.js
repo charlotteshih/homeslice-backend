@@ -7,7 +7,7 @@ function makeRestaurantsArray() {
       id: 1,
       name: "Mario's Pizza",
       email: "mario@mariospizza.com",
-      password: bcrypt.hashSync("ItsAMe123!", 12),
+      password: "ItsAMe123!",
       phone: "333-333-3333",
       street_address: "123 Mushroom Street",
       city: "Mushroom Land",
@@ -18,7 +18,7 @@ function makeRestaurantsArray() {
       id: 2,
       name: "Luigi's Pizza",
       email: "luigi@luigispizza.com",
-      password: bcrypt.hashSync("ItsAMe456!", 12),
+      password: "ItsAMe456!",
       phone: "444-444-4444",
       street_address: "456 Mansion Way",
       city: "Mushroom Land",
@@ -29,7 +29,7 @@ function makeRestaurantsArray() {
       id: 3,
       name: "Bowser's Pizzeria",
       email: "bowser@bowserspizzeria.com",
-      password: bcrypt.hashSync("Rawr789!", 12),
+      password: "Rawr789!",
       phone: "555-555-5555",
       street_address: "BOWSER'S CASTLE",
       city: "Koopa Keep",
@@ -268,22 +268,29 @@ function makeFixtures() {
 // FELIX: I removed the trx stuff that cleared out the sequences, because it seemed to break this function.
 function cleanTables(db) {
   return db.raw(
-    `TRUNCATE
+    `BEGIN;
+
+    TRUNCATE
         orders,
+        admin,
         restaurants,
         pizzas,
         customers
         RESTART IDENTITY CASCADE;
       
       ALTER SEQUENCE orders_id_seq MINVALUE 0 START WITH 1;
+      ALTER SEQUENCE admin_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE restaurants_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE pizzas_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE customers_id_seq MINVALUE 0 START WITH 1;
 
       SELECT setval('orders_id_seq', 0);
+      SELECT setval('admin_id_seq', 0);
       SELECT setval('restaurants_id_seq', 0);
       SELECT setval('pizzas_id_seq', 0);
-      SELECT setval('customers_id_seq', 0)`
+      SELECT setval('customers_id_seq', 0);
+      
+      COMMIT;`
   );
 }
 
@@ -348,10 +355,12 @@ function seedOrders(db, orders) {
 // }
 
 function makeAuthHeader(restaurant, secret = process.env.JWT_SECRET) {
-  const token = jwt.sign({ email: restaurant.email }, secret, {
+  console.log('email', restaurant.email)
+  const token = jwt.sign({ "email": restaurant.email }, secret, {
     subject: restaurant.email,
     algorithm: "HS256"
   });
+  console.log('token', token);
   return `Bearer ${token}`;
 }
 

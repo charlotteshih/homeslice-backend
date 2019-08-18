@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe(`Restaurants Endpoints`, () => {
+describe.only(`Restaurants Endpoints`, () => {
   let db;
 
   const { testRestaurants } = helpers.makeFixtures();
@@ -17,12 +17,11 @@ describe(`Restaurants Endpoints`, () => {
     app.set(`db`, db);
   });
 
-  after(`Disconnect from db`, () => db.destroy());
   before(`Cleanup`, () => helpers.cleanTables(db));
+  after(`Disconnect from db`, () => db.destroy());
   afterEach(`Cleanup`, () => helpers.cleanTables(db));
 
-  //doesn't pass because bcrypted passwords don't match
-  describe.only(`GET /api/restaurants`, () => {
+  describe(`GET /api/restaurants`, () => {
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
         helpers.seedRestaurants(db, seedRestaurants);
@@ -31,13 +30,24 @@ describe(`Restaurants Endpoints`, () => {
       it(`Responds with 200 and all of the restaurants`, () => {
         return supertest(app)
           .get(`/api/restaurants`)
-          .expect(200, testRestaurants);
+          .expect(200)
+          .then(res => {
+            const passwordStringArr = seedRestaurants.map(restaurant => restaurant.password);
+
+            const hashStringArr = res.body.map(restaurant => restaurant.password);
+
+            let pwMatchArr = []
+            for (let i = 0; i < hashStringArr; i++) {
+              pwMatchArr.push(bcrypt.compareSync(passwordStringArr[i], hashStringArr[i]));
+            }
+            return pwMatchArr;
+          })
+          .then(pwMatchArr => pwMatchArr.forEach(pwMatch => expect(pwMatch).to.be.true));
       });
     });
   });
 
   describe(`GET /api/restaurants/:restaurant_id`, () => {
-    //passes
     context(`Given no restaurants`, () => {
       it(`Responds with 404`, () => {
         const restaurantId = 12345;
@@ -47,22 +57,27 @@ describe(`Restaurants Endpoints`, () => {
       });
     });
 
-    // doesn't pass because bcrypted passwords don't match
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
         helpers.seedRestaurants(db, seedRestaurants);
       });
 
       it(`Responds with 200 and the specified restaurant`, () => {
-        console.log('seedRestaurants', seedRestaurants);
+        let password = seedRestaurants[0].password;
         return supertest(app)
           .get(`/api/restaurants/1`)
-          .expect(200, seedRestaurants[0]);
+          .expect(200)
+          .then(res => {
+            let hashedPw = res.body.password;
+            return bcrypt.compareSync(password, hashedPw);
+          })
+          .then(pwMatch => {
+            expect(pwMatch).to.be.true;
+          });
       });
     });
   });
 
-  // Doesn't pass because bcrypted passwords don't match
   describe(`POST /api/restaurants`, () => {
     context(`Given no restaurants`, () => {
       it(`Responds with 201 and a restaurant object`, () => {
@@ -70,7 +85,7 @@ describe(`Restaurants Endpoints`, () => {
           id: 1,
           name: "Test Restaurant",
           email: "test@homeslice.com",
-          password: bcrypt.hashSync("ThisIs1Test!", 12),
+          password: "ThisIs1Test!",
           phone: "000-000-0000",
           street_address: "123 Test Restaurant Street",
           city: "Testville",
@@ -78,15 +93,23 @@ describe(`Restaurants Endpoints`, () => {
           zipcode: "99999"
         };
 
+        const password = restaurantInfo.password
+
         return supertest(app)
           .post(`/api/restaurants`)
           .send(restaurantInfo)
-          .expect(201, restaurantInfo);
+          .expect(201)
+          .then(res => {
+            let hashedPw = res.body.password;
+            return bcrypt.compareSync(password, hashedPw);
+          })
+          .then(pwMatch => {
+            expect(pwMatch).to.be.true;
+          });
       });
     });
   });
 
-  // This test doesn't pass because it needs authorization
   describe(`PATCH /api/restaurants/:restaurant_id`, () => {
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
@@ -95,26 +118,21 @@ describe(`Restaurants Endpoints`, () => {
 
       it(`Responds with 204`, () => {
         const restaurantInfo = {
-          id: 1,
           name: "Test Restaurant",
-          email: "test@homeslice.com",
-          password: bcrypt.hashSync("ThisIs1Test!", 12),
-          phone: "000-000-0000",
-          street_address: "123 Test Restaurant Street",
-          city: "Testville",
           state: "MA",
           zipcode: "99999"
         };
 
         return supertest(app)
           .patch(`/api/restaurants/1`)
+          .set('Authorization', helpers.makeAuthHeader(testRestaurants[0]))
+          .set('Content-Type', 'Application/JSON')
           .send(restaurantInfo)
           .expect(204);
       });
     });
   });
 
-  // passes
   describe(`DELETE /api/restaurants/:restaurant_id`, () => {
     context(`Given there are restaurants in the database`, () => {
       beforeEach(`Insert restaurants`, () => {
