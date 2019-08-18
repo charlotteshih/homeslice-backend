@@ -18,7 +18,7 @@ describe(`Customers Endpoints`, function () {
 
   after(`Disconnect from db`, () => db.destroy());
   before(`Cleanup`, () => helpers.cleanTables(db));
-  afterEach(`Cleanup`, () => helpers.cleanTables);
+  afterEach(`Cleanup`, () => helpers.cleanTables(db));
 
   describe(`GET /api/customers`, () => {
     context(`Given there are customers in the database`, () => {
@@ -39,8 +39,8 @@ describe(`Customers Endpoints`, function () {
       it(`Responds with 404`, () => {
         const customerId = 12345;
         return supertest(app)
-          .get(`/api/customers${customerId}`)
-          .expect(404, {});
+          .get(`/api/customers/${customerId}`)
+          .expect(404, { "error": "Customer doesn't exist." });
       });
     });
 
@@ -89,19 +89,12 @@ describe(`Customers Endpoints`, function () {
 
       it(`Responds with 204`, () => {
         const customerInfo = {
-          id: 1,
           first_name: "Test",
           last_name: "Customer",
-          email: "test@customer.com",
-          phone: "000-000-0000",
-          street_address: "123 Test Address Street",
-          city: "Test City",
-          state: "TEST",
-          zipcode: "99999"
         };
 
         return supertest(app)
-          .patch(`/api/customers/1`)
+          .patch(`/api/customers/2`)
           .send(customerInfo)
           .expect(204);
       });
@@ -118,7 +111,7 @@ describe(`Customers Endpoints`, function () {
         return supertest(app)
           .delete(`/api/customers/1`)
           .expect(204);
-      })
-    })
-  })
+      });
+    });
+  });
 });

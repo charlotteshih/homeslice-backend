@@ -7,31 +7,33 @@ const RestaurantsService = {
   getAllRestaurants(db) {
     return db
       .from("restaurants")
-      .select(
-        "id",
-        "name",
-        "email",
-        "phone",
-        "street_address",
-        "city",
-        "state",
-        "zipcode"
-      );
+      .select("*")
+    // .select(
+    //   "id",
+    //   "name",
+    //   "email",
+    //   "phone",
+    //   "street_address",
+    //   "city",
+    //   "state",
+    //   "zipcode"
+    // );
   },
 
   getRestaurantById(db, id) {
     return db
       .from("restaurants")
-      .select(
-        "id",
-        "name",
-        "email",
-        "phone",
-        "street_address",
-        "city",
-        "state",
-        "zipcode"
-      )
+      .select("*")
+      // .select(
+      //   "id",
+      //   "name",
+      //   "email",
+      //   "phone",
+      //   "street_address",
+      //   "city",
+      //   "state",
+      //   "zipcode"
+      // )
       .where({ id })
       .first();
   },

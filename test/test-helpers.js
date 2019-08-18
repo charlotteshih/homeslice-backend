@@ -175,54 +175,54 @@ function makeExpectedCustomer(customers, customer) {
   };
 }
 
-function makeMaliciousRestaurant(restaurant) {
-  const maliciousRestaurant = {
-    id: 911,
-    name: "Uh-oh",
-    email: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    password: "Password123!",
-    phone: "000-000-0000",
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-    city: "City Name",
-    state: "State",
-    zipcode: "00000"
-  };
-  const expectedRestaurant = {
-    ...makeExpectedRestaurant([restaurant], maliciousRestaurant),
-    email:
-      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
-  };
-  return {
-    maliciousRestaurant,
-    expectedRestaurant
-  };
-}
+// function makeMaliciousRestaurant(restaurant) {
+//   const maliciousRestaurant = {
+//     id: 911,
+//     name: "Uh-oh",
+//     email: 'Naughty naughty very naughty <script>alert("xss");</script>',
+//     password: "Password123!",
+//     phone: "000-000-0000",
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+//     city: "City Name",
+//     state: "State",
+//     zipcode: "00000"
+//   };
+//   const expectedRestaurant = {
+//     ...makeExpectedRestaurant([restaurant], maliciousRestaurant),
+//     email:
+//       'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+//   };
+//   return {
+//     maliciousRestaurant,
+//     expectedRestaurant
+//   };
+// }
 
-function makeMaliciousCustomer(customer) {
-  const maliciousCustomer = {
-    id: 911,
-    first_name: "Uh-oh",
-    last_name: "Spaghetti-Os",
-    email: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    phone: "000-000-0000",
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
-    city: "City Name",
-    state: "State",
-    zipcode: "00000"
-  };
+// function makeMaliciousCustomer(customer) {
+//   const maliciousCustomer = {
+//     id: 911,
+//     first_name: "Uh-oh",
+//     last_name: "Spaghetti-Os",
+//     email: 'Naughty naughty very naughty <script>alert("xss");</script>',
+//     phone: "000-000-0000",
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
+//     city: "City Name",
+//     state: "State",
+//     zipcode: "00000"
+//   };
 
-  const expectedCustomer = {
-    ...makeExpectedCustomer([customer], maliciousCustomer),
-    email:
-      'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
-    street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
-  };
-  return {
-    maliciousCustomer,
-    expectedCustomer
-  };
-}
+//   const expectedCustomer = {
+//     ...makeExpectedCustomer([customer], maliciousCustomer),
+//     email:
+//       'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;',
+//     street_address: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+//   };
+//   return {
+//     maliciousCustomer,
+//     expectedCustomer
+//   };
+// }
 
 function addId(array) {
   let newArray = [];
@@ -244,20 +244,23 @@ function makeFixtures() {
 function cleanTables(db) {
   return db.raw(
     `BEGIN;
-    
+
     TRUNCATE
         orders,
+        admin,
         restaurants,
         pizzas,
         customers
         RESTART IDENTITY CASCADE;
       
       ALTER SEQUENCE orders_id_seq MINVALUE 0 START WITH 1;
+      ALTER SEQUENCE admin_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE restaurants_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE pizzas_id_seq MINVALUE 0 START WITH 1;
       ALTER SEQUENCE customers_id_seq MINVALUE 0 START WITH 1;
 
       SELECT setval('orders_id_seq', 0);
+      SELECT setval('admin_id_seq', 0);
       SELECT setval('restaurants_id_seq', 0);
       SELECT setval('pizzas_id_seq', 0);
       SELECT setval('customers_id_seq', 0);
@@ -267,9 +270,13 @@ function cleanTables(db) {
 }
 
 function seedRestaurants(db, restaurants) {
+  const preppedRestaurants = restaurants.map(restaurant => ({
+    ...restaurant,
+    password: bcrypt.hashSync(restaurant.password, 12)
+  }));
   return db
     .into("restaurants")
-    .insert(restaurants)
+    .insert(preppedRestaurants)
     .then(() => {
       db.raw(`SELECT setval('restaurants_id_seq', ?)`, [
         restaurants[restaurants.length - 1].id
@@ -310,23 +317,25 @@ function seedOrders(db, orders) {
     });
 }
 
-function seedMaliciousRestaurant(db, restaurant, maliciousRestaurant) {
-  return seedRestaurants(db, [restaurant]).then(() => {
-    db.insert([maliciousRestaurant]).into("restaurants");
-  });
-}
+// function seedMaliciousRestaurant(db, restaurant, maliciousRestaurant) {
+//   return seedRestaurants(db, [restaurant]).then(() => {
+//     db.insert([maliciousRestaurant]).into("restaurants");
+//   });
+// }
 
-function seedMaliciousCustomer(db, customer, maliciousCustomer) {
-  return seedCustomers(db, [customer]).then(() => {
-    db.insert([maliciousCustomer]).into("customers");
-  });
-}
+// function seedMaliciousCustomer(db, customer, maliciousCustomer) {
+//   return seedCustomers(db, [customer]).then(() => {
+//     db.insert([maliciousCustomer]).into("customers");
+//   });
+// }
 
 function makeAuthHeader(restaurant, secret = process.env.JWT_SECRET) {
-  const token = jwt.sign({ email: restaurant.email }, secret, {
+  console.log('email', restaurant.email)
+  const token = jwt.sign({ "email": restaurant.email }, secret, {
     subject: restaurant.email,
     algorithm: "HS256"
   });
+  console.log('token', token);
   return `Bearer ${token}`;
 }
 
@@ -337,13 +346,13 @@ module.exports = {
   makeOrdersArray,
   // makeExpectedRestaurant,
   // makeExpectedCustomer,
-  makeMaliciousRestaurant,
-  makeMaliciousCustomer,
+  // makeMaliciousRestaurant,
+  // makeMaliciousCustomer,
   addId,
   makeFixtures,
   cleanTables,
-  seedMaliciousRestaurant,
-  seedMaliciousCustomer,
+  // seedMaliciousRestaurant,
+  // seedMaliciousCustomer,
   makeAuthHeader,
   seedRestaurants,
   seedPizzas,
