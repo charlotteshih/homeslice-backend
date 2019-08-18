@@ -5,7 +5,7 @@ function makeRestaurantsArray() {
   return [
     {
       name: "Mario's Pizza",
-      email: "mario@mariospizza.com",
+      email: "1mario@mariospizza.com",
       password: "ItsAMe123!",
       phone: "333-333-3333",
       street_address: "123 Mushroom Street",
@@ -15,7 +15,7 @@ function makeRestaurantsArray() {
     },
     {
       name: "Luigi's Pizza",
-      email: "luigi@luigispizza.com",
+      email: "1luigi@luigispizza.com",
       password: "ItsAMe456!",
       phone: "444-444-4444",
       street_address: "456 Mansion Way",
@@ -25,7 +25,7 @@ function makeRestaurantsArray() {
     },
     {
       name: "Bowser's Pizzeria",
-      email: "bowser2@bowserspizzeria.com",
+      email: "1bowser2@bowserspizzeria.com",
       password: "Rawr789!",
       phone: "555-555-5555",
       street_address: "BOWSER'S CASTLE",
@@ -35,17 +35,7 @@ function makeRestaurantsArray() {
     },
     {
       name: "Bowser's Pizzeria",
-      email: "bowser3@bowserspizzeria.com",
-      password: "Rawr789!",
-      phone: "555-555-5555",
-      street_address: "BOWSER'S CASTLE",
-      city: "Koopa Keep",
-      state: "CT",
-      zipcode: "03551"
-    },
-    {
-      name: "Bowser's Pizzeria",
-      email: "bowser4@bowserspizzeria.com",
+      email: "1bowser3@bowserspizzeria.com",
       password: "Rawr789!",
       phone: "555-555-5555",
       street_address: "BOWSER'S CASTLE",
@@ -136,7 +126,7 @@ function makeCustomersArray() {
   ];
 }
 
-function makeOrdersArray(restaurants, pizzas, customers) {
+function makeOrdersArray() {
   return [
     {
       restaurant_id: 1,
@@ -147,25 +137,25 @@ function makeOrdersArray(restaurants, pizzas, customers) {
       order_total: "10.59"
     },
     {
-      restaurant_id: 2,
-      pizza_id: 2,
-      customer_id: 2,
+      restaurant_id: 1,
+      pizza_id: 1,
+      customer_id: 1,
       date_created: "2029-01-23T04:28:32.615Z",
       order_status: "Completed",
       order_total: "7.00"
     },
     {
-      restaurant_id: 3,
-      pizza_id: 3,
-      customer_id: 3,
+      restaurant_id: 1,
+      pizza_id: 1,
+      customer_id: 1,
       date_created: "2029-01-23T04:28:32.615Z",
       order_status: "In Progress",
       order_total: "11.99"
     },
     {
-      restaurant_id: 4,
-      pizza_id: 4,
-      customer_id: 4,
+      restaurant_id: 1,
+      pizza_id: 1,
+      customer_id: 1,
       date_created: "2029-01-23T04:28:32.615Z",
       order_status: "Completed",
       order_total: "9.69"
@@ -265,18 +255,16 @@ function makeFixtures() {
   const testRestaurants = makeRestaurantsArray();
   const testPizzas = makePizzasArray();
   const testCustomers = makeCustomersArray();
-  const testOrders = makeOrdersArray(
-    testRestaurants,
-    testPizzas,
-    testCustomers
-  );
+  const testOrders = makeOrdersArray();
   return { testRestaurants, testPizzas, testCustomers, testOrders };
 }
 
 // FELIX: I removed the trx stuff that cleared out the sequences, because it seemed to break this function.
 function cleanTables(db) {
   return db.raw(
-    `TRUNCATE
+    `BEGIN;
+    
+    TRUNCATE
         orders,
         restaurants,
         pizzas,
@@ -291,18 +279,16 @@ function cleanTables(db) {
       SELECT setval('orders_id_seq', 0);
       SELECT setval('restaurants_id_seq', 0);
       SELECT setval('pizzas_id_seq', 0);
-      SELECT setval('customers_id_seq', 0)`
+      SELECT setval('customers_id_seq', 0);
+      
+      COMMIT;`
   );
 }
 
 function seedRestaurants(db, restaurants) {
-  const preppedRestaurants = restaurants.map(restaurant => ({
-    ...restaurant,
-    password: bcrypt.hashSync(restaurant.password, 1)
-  }));
   return db
     .into("restaurants")
-    .insert(preppedRestaurants)
+    .insert(restaurants)
     .then(() => {
       db.raw(`SELECT setval('restaurants_id_seq', ?)`, [
         restaurants[restaurants.length - 1].id

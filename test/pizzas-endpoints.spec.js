@@ -53,6 +53,18 @@ describe("Pizzas Endpoints", function() {
           .expect(404, { error: `Pizza doesn't exist.` });
       });
     });
+    context(`Given there are pizzas in the database`, () => {
+      beforeEach("insert pizzas", () => {
+        helpers.seedPizzas(db, testPizzas);
+      });
+
+      it("responds with 200 and the selected order", () => {
+        const pizzaId = 1;
+        return supertest(app)
+          .get(`/api/pizzas/${pizzaId}`)
+          .expect(200);
+      });
+    });
   });
 
   describe(`POST /api/pizzas`, () => {

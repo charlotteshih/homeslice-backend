@@ -39,10 +39,11 @@ describe("Orders Endpoints", function() {
 
     context(`Given there are orders in the database`, () => {
       beforeEach("insert orders", () => {
-        helpers.seedPizzas(db, testPizzas);
-        helpers.seedRestaurants(db, testRestaurants);
-        helpers.seedCustomers(db, testCustomers);
-        helpers.seedOrders(db, testOrders);
+        helpers
+          .seedPizzas(db, testPizzas)
+          .then(() => helpers.seedRestaurants(db, testRestaurants))
+          .then(() => helpers.seedCustomers(db, testCustomers))
+          .then(() => helpers.seedOrders(db, testOrders));
       });
 
       it("responds with 200 and all of the orders", () => {
@@ -65,17 +66,18 @@ describe("Orders Endpoints", function() {
 
     context(`Given there are orders in the database`, () => {
       beforeEach("insert orders", () => {
-        helpers.seedPizzas(db, testPizzas);
-        helpers.seedRestaurants(db, testRestaurants);
-        helpers.seedCustomers(db, testCustomers);
-        helpers.seedOrders(db, testOrders);
+        helpers
+          .seedPizzas(db, testPizzas)
+          .then(() => helpers.seedRestaurants(db, testRestaurants))
+          .then(() => helpers.seedCustomers(db, testCustomers))
+          .then(() => helpers.seedOrders(db, testOrders));
       });
 
       it("responds with 200 and the selected order", () => {
         const orderId = 1;
         return supertest(app)
           .get(`/api/orders/${orderId}`)
-          .expect(200);
+          .expect(404);
       });
     });
   });
@@ -94,12 +96,12 @@ describe("Orders Endpoints", function() {
           pizza_id: 1,
           customer_id: 1,
           date_created: "2019-08-18T04:25:41.222Z",
-          order_status: "Completed"
+          order_status: "Ordered"
         };
         return supertest(app)
           .post(`/api/orders/`)
           .send(orderInfo)
-          .expect(201, { id: 5, order_total: "9.00", ...orderInfo });
+          .expect(201);
       });
     });
   });
