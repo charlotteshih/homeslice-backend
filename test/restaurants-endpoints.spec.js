@@ -18,8 +18,8 @@ describe.only(`Restaurants Endpoints`, () => {
   });
 
   before(`Cleanup`, () => helpers.cleanTables(db));
-  after(`Disconnect from db`, () => db.destroy());
   afterEach(`Cleanup`, () => helpers.cleanTables(db));
+  after(`Disconnect from db`, () => db.destroy());
 
   describe(`GET /api/restaurants`, () => {
     context(`Given there are restaurants in the database`, () => {
@@ -63,9 +63,11 @@ describe.only(`Restaurants Endpoints`, () => {
       });
 
       it(`Responds with 200 and the specified restaurant`, () => {
-        let password = seedRestaurants[0].password;
+        let password = seedRestaurants[1].password;
+        console.log('seedRestaurants', seedRestaurants)
+
         return supertest(app)
-          .get(`/api/restaurants/1`)
+          .get(`/api/restaurants/2`)
           .expect(200)
           .then(res => {
             let hashedPw = res.body.password;
@@ -123,10 +125,11 @@ describe.only(`Restaurants Endpoints`, () => {
           zipcode: "99999"
         };
 
+        let bearerToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjFtYXJpb0BtYXJpb3NwaXp6YS5jb20iLCJpYXQiOjE1NjYxNzI4MTAsInN1YiI6IjFtYXJpb0BtYXJpb3NwaXp6YS5jb20ifQ.qrsogFV6gUlP2mJ6mxiTNTt1RJeWcX-F8hzy_CEWxVU';
+
         return supertest(app)
           .patch(`/api/restaurants/1`)
-          .set('Authorization', helpers.makeAuthHeader(testRestaurants[0]))
-          .set('Content-Type', 'Application/JSON')
+          .set('Authorization', `bearer ${bearerToken}`)
           .send(restaurantInfo)
           .expect(204);
       });
