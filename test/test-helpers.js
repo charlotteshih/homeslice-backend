@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 function makeRestaurantsArray() {
   return [
     {
+      id: 1,
       name: "Mario's Pizza",
       email: "1mario@mariospizza.com",
       password: "ItsAMe123!",
@@ -14,6 +15,7 @@ function makeRestaurantsArray() {
       zipcode: "02467"
     },
     {
+      id: 2,
       name: "Luigi's Pizza",
       email: "1luigi@luigispizza.com",
       password: "ItsAMe456!",
@@ -24,6 +26,7 @@ function makeRestaurantsArray() {
       zipcode: "02467"
     },
     {
+      id: 3,
       name: "Bowser's Pizzeria",
       email: "1bowser2@bowserspizzeria.com",
       password: "Rawr789!",
@@ -34,6 +37,7 @@ function makeRestaurantsArray() {
       zipcode: "03551"
     },
     {
+      id: 4,
       name: "Bowser's Pizzeria",
       email: "1bowser3@bowserspizzeria.com",
       password: "Rawr789!",
