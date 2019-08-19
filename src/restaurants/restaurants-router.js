@@ -101,7 +101,7 @@ restaurantsRouter
       });
     }
 
-    RestaurantsService.updateRestaurant(db, restaurant_id, restaurantToUpdate)
+    RestaurantsService.updateRestaurant(req.app.get('db'), req.params.restaurant_id, newFields)
       .then(() => res.status(204).end())
       .catch(next);
   })

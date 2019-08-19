@@ -12,7 +12,6 @@ describe("Orders Endpoints", function () {
     testOrders
   } = helpers.makeFixtures();
 
-
   before("make knex instance", () => {
     db = knex({
       client: "pg",
