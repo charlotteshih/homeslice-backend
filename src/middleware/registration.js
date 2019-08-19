@@ -1,22 +1,19 @@
 function hasEmailInDb(db, email) {
   return db("restaurants").where({ email })
     .then(restaurantQueryResult => {
-      console.log('restaurants query', restaurantQueryResult);
       if (restaurantQueryResult.toString()) {
         return true;
       }
       return db("admin").where({ email });
     })
     .then(adminQueryResult => {
-      console.log('admin query', adminQueryResult);
       if (adminQueryResult.toString()) {
         return true;
       }
       return db("customers").where({ email });
     })
     .then(customersQueryResult => {
-      console.log('customersQuery', customersQueryResult);
-      if(customersQueryResult.toString()) {
+      if (customersQueryResult.toString()) {
         return true
       }
       return false;

@@ -12,7 +12,6 @@ restaurantsRouter
   .get((req, res, next) => {
     RestaurantsService.getAllRestaurants(req.app.get("db"))
       .then(restaurants => {
-        console.log(restaurants);
         res
           .status(200)
           .json(RestaurantsService.serializeMultipleRestaurants(restaurants));
