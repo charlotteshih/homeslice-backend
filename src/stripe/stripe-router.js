@@ -5,7 +5,7 @@ const stripeRouter = express.Router();
 const jsonBodyParser = express.json();
 
 stripeRouter.route("/charge").post(jsonBodyParser, (req, res) => {
-  let charge = stripe.charges
+  stripe.charges
     .create({
       amount: 1000,
       currency: "usd",
@@ -13,10 +13,10 @@ stripeRouter.route("/charge").post(jsonBodyParser, (req, res) => {
       source: req.body.id
     })
     .then(charge => {
-      console.log('charge', charge)
+      // console.log('charge', charge)
       res.status(200).json({ charge });
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => res.status(500).json({ charge }));
 });
 
 module.exports = stripeRouter;
