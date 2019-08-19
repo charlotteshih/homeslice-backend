@@ -13,10 +13,9 @@ stripeRouter.route("/charge").post(jsonBodyParser, (req, res) => {
       source: req.body.id
     })
     .then(charge => {
-      // console.log('charge', charge)
-      res.status(204);
+      res.status(204).send({ charge });
     })
-    .catch(err => res.status(500).json(err));
+    .catch(err => res.status(204).json(err));
 });
 
 module.exports = stripeRouter;
