@@ -12,8 +12,6 @@ describe("Orders Endpoints", function () {
     testOrders
   } = helpers.makeFixtures();
 
-  // console.log("testOrders", testOrders);
-
   before("make knex instance", () => {
     db = knex({
       client: "pg",

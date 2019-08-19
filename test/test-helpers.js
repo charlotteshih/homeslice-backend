@@ -334,12 +334,10 @@ function seedOrders(db, orders) {
 // }
 
 function makeAuthHeader(restaurant, secret = process.env.JWT_SECRET) {
-  console.log('email', restaurant.email)
   const token = jwt.sign({ "email": restaurant.email }, secret, {
     subject: restaurant.email,
     algorithm: "HS256"
   });
-  console.log('token', token);
   return `Bearer ${token}`;
 }
 
