@@ -5,7 +5,7 @@ const stripeRouter = express.Router();
 const jsonBodyParser = express.json();
 
 stripeRouter.route("/charge").post(jsonBodyParser, (req, res) => {
-  stripe.charges
+  let charge = stripe.charges
     .create({
       amount: 1000,
       currency: "usd",
