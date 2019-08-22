@@ -27,6 +27,7 @@ ordersRouter
 
     PizzasService.getPizzaById(req.app.get('db'), pizza_id)
       .then(res => {
+        // Takes pizza info from response body and calculates pricing information based on size and type
         let pizzaSize = res.size;
         let pizzaType = res.type;
 
